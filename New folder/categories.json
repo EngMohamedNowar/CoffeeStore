@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "arabica-beans",
+    "name": "Arabica Beans",
+    "description": "قهوة عربية فاخرة، نكهات غنية ومتوازنة"
+  },
+  {
+    "slug": "robusta-beans",
+    "name": "Robusta Beans",
+    "description": "قهوة روبوستا، قوة وكافيين أعلى"
+  },
+  {
+    "slug": "specialty-blends",
+    "name": "Specialty Blends",
+    "description": "خلطات مختصة محدودة الإصدار"
+  }
+]

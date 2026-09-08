@@ -1,0 +1,39 @@
+[
+  {
+    "email": "sara.mahmoud@example.com",
+    "password": "Customer@123",
+    "fullName": "Sara Mahmoud",
+    "phoneNumber": "01012345678",
+    "addresses": [
+      {
+        "label": "Home",
+        "city": "Benha",
+        "street": "Gomhoria Street",
+        "building": "Building 12, Apt 4",
+        "isDefault": true
+      }
+    ]
+  },
+  {
+    "email": "omar.khaled@example.com",
+    "password": "Customer@123",
+    "fullName": "Omar Khaled",
+    "phoneNumber": "01098765432",
+    "addresses": [
+      {
+        "label": "Home",
+        "city": "Cairo",
+        "street": "El Haram Street",
+        "building": "Tower 5, Floor 3",
+        "isDefault": true
+      },
+      {
+        "label": "Work",
+        "city": "Cairo",
+        "street": "Smart Village",
+        "building": "Building B2",
+        "isDefault": false
+      }
+    ]
+  }
+]
