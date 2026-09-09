@@ -1,0 +1,56 @@
+[
+  {
+    "slug": "ethiopian-yirgacheffe",
+    "name": "Ethiopian Yirgacheffe",
+    "description": "قهوة إثيوبية بنكهات فاكهية وزهرية مميزة، تحميص فاتح يبرز حموضتها الطبيعية",
+    "origin": "Ethiopia",
+    "roastLevel": "Light",
+    "categoryId": "906aa879-93bd-490b-ae93-fcf0252fb620",
+    "isFeatured": true,
+    "variants": [
+      { "weightInGrams": 250, "grindType": "WholeBean", "price": 350, "stockQuantity": 50, "sku": "ETH-YIRG-250-WB" },
+      { "weightInGrams": 500, "grindType": "WholeBean", "price": 650, "stockQuantity": 30, "sku": "ETH-YIRG-500-WB" },
+      { "weightInGrams": 250, "grindType": "Medium", "price": 350, "stockQuantity": 40, "sku": "ETH-YIRG-250-MD" }
+    ]
+  },
+  {
+    "slug": "colombian-supremo",
+    "name": "Colombian Supremo",
+    "description": "قهوة كولومبية متوازنة، نكهة كراميل وشوكولاتة خفيفة",
+    "origin": "Colombia",
+    "roastLevel": "Medium",
+    "categoryId": "906aa879-93bd-490b-ae93-fcf0252fb620",
+    "isFeatured": true,
+    "variants": [
+      { "weightInGrams": 250, "grindType": "WholeBean", "price": 300, "stockQuantity": 60, "sku": "COL-SUP-250-WB" },
+      { "weightInGrams": 1000, "grindType": "WholeBean", "price": 1100, "stockQuantity": 20, "sku": "COL-SUP-1000-WB" }
+    ]
+  },
+  {
+    "slug": "vietnamese-robusta",
+    "name": "Vietnamese Robusta",
+    "description": "قهوة فيتنامية قوية، مثالية للإسبريسو والقهوة التركية",
+    "origin": "Vietnam",
+    "roastLevel": "Dark",
+    "categoryId": "b9afebe1-0b24-49f0-bd4a-fe2a4458c23c",
+    "isFeatured": false,
+    "variants": [
+      { "weightInGrams": 500, "grindType": "Fine", "price": 280, "stockQuantity": 45, "sku": "VN-ROB-500-FN" },
+      { "weightInGrams": 500, "grindType": "ExtraFine", "price": 290, "stockQuantity": 25, "sku": "VN-ROB-500-XF" }
+    ]
+  },
+  {
+    "slug": "house-special-blend",
+    "name": "House Special Blend",
+    "description": "خلطة خاصة بالمتجر، مزيج من الأرابيكا والروبوستا لطعم متكامل",
+    "origin": "Blend",
+    "roastLevel": "MediumDark",
+    "categoryId": "1d72f0a4-2951-4564-8238-b496cd73343c",
+    "isFeatured": true,
+    "variants": [
+      { "weightInGrams": 250, "grindType": "WholeBean", "price": 320, "stockQuantity": 70, "sku": "HSE-BLD-250-WB" },
+      { "weightInGrams": 250, "grindType": "Medium", "price": 320, "stockQuantity": 55, "sku": "HSE-BLD-250-MD" },
+      { "weightInGrams": 500, "grindType": "Medium", "price": 600, "stockQuantity": 35, "sku": "HSE-BLD-500-MD" }
+    ]
+  }
+]

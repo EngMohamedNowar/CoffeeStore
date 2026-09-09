@@ -1,5 +1,9 @@
+using ECommerce.Api.Extensions;
+using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure;
-
+using ECommerce.Infrastructure.Persistence.Data;
+using Microsoft.AspNetCore.Identity;
+using IdentityRole = Microsoft.AspNetCore.Identity.IdentityRole;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,7 +13,20 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddInfrastructureSercices(builder.Configuration);
 
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.User.RequireUniqueEmail = true;
+})
+.AddEntityFrameworkStores<StoreDbContext>()
+.AddDefaultTokenProviders();
+
+
 var app = builder.Build();
+
+await app.SeedAndMigrationAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
