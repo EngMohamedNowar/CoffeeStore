@@ -10,7 +10,7 @@ namespace ECommerce.Domain.Contracts.Repositories
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
-        Task<TEntity?> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task <TEntity?> GetBySlugAsync(string slug, CancellationToken ct = default);
         Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken ct = default);
     }
 }

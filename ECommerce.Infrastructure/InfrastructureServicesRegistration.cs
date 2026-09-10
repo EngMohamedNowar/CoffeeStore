@@ -13,7 +13,7 @@ namespace ECommerce.Infrastructure
 {
     public static class InfrastructureServicesRegistration
     {
-        public static IServiceCollection AddInfrastructureSercices(this IServiceCollection services,IConfiguration configuration) 
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,IConfiguration configuration) 
         {
             services.AddDbContext<StoreDbContext>(options =>
             {

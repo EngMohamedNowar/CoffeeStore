@@ -2,7 +2,6 @@
 
 public class Result
 {
-
     public bool IsSuccess { get; }
     public bool IsFailure => !IsSuccess;
     public IReadOnlyList<Error> Errors { get; }
@@ -12,6 +11,7 @@ public class Result
         IsSuccess = isSuccess;
         Errors = errors;
     }
+
     public static Result Ok()
         => new(true, Array.Empty<Error>());
 
@@ -26,13 +26,21 @@ public class Result<T> : Result
 {
     public T? Value { get; }
 
-    private Result(T? value, bool isSuccess, IReadOnlyList<Error> errors)
+    private Result(
+        T? value,
+        bool isSuccess,
+        IReadOnlyList<Error> errors)
         : base(isSuccess, errors)
     {
         Value = value;
     }
 
+    // Object
     public static Result<T> Ok(T value)
+        => new(value, true, Array.Empty<Error>());
+
+    // IReadOnlyList
+    public static Result<IReadOnlyList<T>> Ok(IReadOnlyList<T> value)
         => new(value, true, Array.Empty<Error>());
 
     public static Result<T> Fail(IReadOnlyList<Error> errors)
