@@ -8,8 +8,12 @@ namespace ECommerce.Application.Services.Contracts;
 
 public interface IProductService
 {
-    Task<IReadOnlyList<ProductDto>> GetAllActiveAsync(CancellationToken cancellationToken = default);
-    Task<ProductDto?> GetBySlugAsync(string slug, CancellationToken cancellationToken = default);
+    Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(
+        CancellationToken ct = default);
+
+    Task<Result<ProductDto>> GetBySlugAsync(
+        string slug,
+        CancellationToken cancellationToken = default);
     Task<Result<Guid>> CreateAsync(CreateProductDto dto, CancellationToken cancellationToken = default);
     Task<Result<bool>> UpdateAsync(Guid id, UpdateProductDto dto, CancellationToken cancellationToken = default);
     Task<Result<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
