@@ -13,8 +13,15 @@ namespace ECommerce.Infrastructure.Persistence.Repositories
         public async Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken ct = default)
              => await context.Set<TEntity>().ToListAsync(ct);
 
-        public async Task<TEntity?> GetByIdAsync(Guid id, CancellationToken ct = default)
-            => await context.FindAsync<TEntity>(id , ct);
+        public async Task<TEntity?> GetBySlugAsync(
+            string slug,
+            CancellationToken ct = default)
+        
+            => await context.Set<TEntity>()
+                .FirstOrDefaultAsync(
+                    x => EF.Property<string>(x, "Slug") == slug,
+                    ct);
+        
 
         public void Add(TEntity entity) => context.Set<TEntity>().Add(entity);
 
