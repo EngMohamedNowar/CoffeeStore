@@ -1,4 +1,5 @@
-﻿using ECommerce.Domain.Common;
+﻿using CoffeeStore.Domain.Entities.Products;
+using ECommerce.Domain.Common;
 using ECommerce.Domain.Contracts.Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace ECommerce.Domain.Contracts
     {
         Task<int> SaveChangesAsync(CancellationToken ct);
         IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity;
+        IProductRepository ProductRepository();
     }
 }

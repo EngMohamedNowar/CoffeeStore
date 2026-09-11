@@ -22,6 +22,9 @@ namespace ECommerce.Application.Services.Classes.Products
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             {
+                var product = await unitOfWork.ProductRepository().GetBySlugAsync(slug);
+                var productDtos = mapper.Map<ProductDto>(product);
+                return Result<ProductDto>.Ok(productDtos);
             }
         }
 
