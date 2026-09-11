@@ -21,19 +21,8 @@ namespace ECommerce.Application.Services.Classes.Products
 
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
-            var product = await unitOfWork
-                .GetRepository<Product>()
-                .GetBySlugAsync(slug, cancellationToken);
-
-            if (product is null)
             {
-                return Result<ProductDto?>.Fail(
-                    Error.NotFound($"{slug} NOT FOUND"));
             }
-
-            var productDto = mapper.Map<ProductDto>(product);
-
-            return Result<ProductDto?>.Ok(productDto);
         }
 
         public Task<Result<Guid>> CreateAsync(CreateProductDto dto, CancellationToken cancellationToken = default)

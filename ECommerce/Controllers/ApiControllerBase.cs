@@ -19,7 +19,6 @@ namespace ECommerce.Api.Controllers
               return ToProblem(result.Errors);
             }
         }
-        [NonAction]
         public ActionResult<T> ToActionResult<T>(Result<T> result)
         {
             if (result.IsSuccess)
