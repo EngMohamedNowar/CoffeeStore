@@ -7,6 +7,7 @@ namespace ECommerce.Api.Controllers
     [ApiController]
     public class ApiControllerBase : ControllerBase
     {
+        [NonAction]
         public ActionResult ToActionResult(Result result)
         {
             if (result.IsSuccess)
@@ -18,7 +19,6 @@ namespace ECommerce.Api.Controllers
               return ToProblem(result.Errors);
             }
         }
-
         public ActionResult<T> ToActionResult<T>(Result<T> result)
         {
             if (result.IsSuccess)

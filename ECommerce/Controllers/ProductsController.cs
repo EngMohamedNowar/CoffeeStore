@@ -20,5 +20,11 @@ namespace ECommerce.Api.Controllers
             var result = await productService.GetBySlugAsync(slug,ct);
             return ToActionResult(result);
         }
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<ProductDto>> GetProductById(string slug, CancellationToken ct = default)
+        //{
+        //    var result = await productService.GetBySlugAsync(slug, ct);
+        //    return ToActionResult(result);
+        //}
     }
 }

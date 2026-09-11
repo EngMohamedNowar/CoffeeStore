@@ -21,14 +21,10 @@ namespace ECommerce.Application.Services.Classes.Products
 
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
-            var product = await unitOfWork.GetRepository<Product>().GetBySlugAsync(slug,cancellationToken); 
-            var productDtos = mapper.Map<ProductDto>(product);
-            if (productDtos is null)
             {
-                return Result<ProductDto>.Fail(Error.NotFound($"{productDtos.Slug} NOT FOUND"));
             }
-            return Result<ProductDto>.Ok(productDtos);
         }
+
         public Task<Result<Guid>> CreateAsync(CreateProductDto dto, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
