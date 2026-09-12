@@ -4,6 +4,7 @@ using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Files")),
+    RequestPath = "/Files"
+
+});
 
 app.UseHttpsRedirection();
 
