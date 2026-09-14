@@ -3,6 +3,7 @@ using CoffeeStore.Application.DTOs.Products;
 using CoffeeStore.Domain.Entities.Products;
 using ECommerce.Application.Common;
 using ECommerce.Application.Services.Contracts;
+using ECommerce.Application.Specifications;
 using ECommerce.Domain.Contracts;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,8 @@ namespace ECommerce.Application.Services.Classes.Products
     {
         public async Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(CancellationToken ct = default)
         {
-            var products = await unitOfWork.GetRepository<Product>().GetAllAsync(ct);
+            var specs = new ProductsWithCategory();
+            var products = await unitOfWork.GetRepository<Product>().GetAllAsync(specs,ct);
             var productsDtos = mapper.Map<IReadOnlyList<ProductDto>>(products);
             return Result<IReadOnlyList<ProductDto>>.Ok(productsDtos);
         }
@@ -22,7 +24,8 @@ namespace ECommerce.Application.Services.Classes.Products
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             {
-                var product = await unitOfWork.ProductRepository().GetBySlugAsync(slug);
+                var specs = new ProductsWithCategory(slug);
+                var product = await unitOfWork.ProductRepository().GetBySlugAsync(slug,specs,cancellationToken);
                 var productDtos = mapper.Map<ProductDto>(product);
                 return Result<ProductDto>.Ok(productDtos);
             }

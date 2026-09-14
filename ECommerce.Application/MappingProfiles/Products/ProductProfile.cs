@@ -2,6 +2,7 @@
 using CoffeeStore.Application.DTOs.Products;
 using CoffeeStore.Domain.Entities.Enums;
 using CoffeeStore.Domain.Entities.Products;
+using ECommerce.Application.MappingProfiles.Products;
 
 namespace CoffeeStore.Application.MappingProfiles.Products;
 
@@ -17,6 +18,10 @@ public class ProductProfile : Profile
             .ForMember(
                 dest => dest.CategoryName,
                 opt => opt.MapFrom(src => src.Category.Name)
+            )
+            .ForMember(
+                dest => dest.ImageUrl,
+                opt => opt.MapFrom<PictureUrlResolver>()
             );
 
         CreateMap<ProductDto, Product>()
