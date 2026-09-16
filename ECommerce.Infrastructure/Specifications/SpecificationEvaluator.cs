@@ -9,7 +9,11 @@ namespace ECommerce.Infrastructure.Specifications
 {
     public static class SpecificationEvaluator
     {
-        public static IQueryable<TEntity> CreateQuery<TEntity>(IQueryable<TEntity> inputQuery,ISpecification<TEntity> specs) where TEntity : BaseEntity
+        public static IQueryable<TEntity>
+            CreateQuery<TEntity>
+            (IQueryable<TEntity> inputQuery,
+            ISpecification<TEntity> specs) where TEntity
+            : BaseEntity
         {
             var query = inputQuery;
 
@@ -23,6 +27,15 @@ namespace ECommerce.Infrastructure.Specifications
 
             if (specs.WhereExpression is not null)
                 query = query.Where(specs.WhereExpression);
+
+            if (specs.OrderByPriceDsc is not null)
+                query = query.OrderBy(specs.OrderByPriceDsc);
+            else if (specs.OrderByPriceAsc is not null)
+                query = query.OrderBy(specs.OrderByPriceAsc);
+            else if (specs.OrderByNameAsc is not null)
+                query = query.OrderBy(specs.OrderByNameAsc);
+            else if (specs.OrderByNameDsc is not null)
+                query = query.OrderBy(specs.OrderByNameDsc);
 
             return query;
 

@@ -24,6 +24,8 @@ public class ProductProfile : Profile
                 opt => opt.MapFrom<PictureUrlResolver>()
             );
 
+        CreateMap<ProductVariant, ProductVariantDto>();
+
         CreateMap<ProductDto, Product>()
             .ForMember(
                 dest => dest.RoastLevel,

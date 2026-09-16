@@ -1,4 +1,5 @@
 ﻿using CoffeeStore.Application.DTOs.Products;
+using ECommerce.Application.Common;
 using ECommerce.Application.Services.Classes.Products;
 using ECommerce.Application.Services.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +10,9 @@ namespace ECommerce.Api.Controllers
     public class ProductsController(IProductService productService) : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts(CancellationToken ct = default)
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams,CancellationToken ct = default)
         {
-            var result = await productService.GetAllActiveAsync(ct);
+            var result = await productService.GetAllActiveAsync(queryParams, ct);
             return ToActionResult(result);
         }
         [HttpGet("{slug}")]

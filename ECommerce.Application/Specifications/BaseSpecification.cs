@@ -25,7 +25,7 @@ namespace ECommerce.Application.Specifications
             IncludeExpressions.Add(expression);
         }
 
-        // Where Condition
+        // Where Expression
         public Expression<Func<TEntity, bool>> WhereExpression { get; private set; }
 
         protected void AddWhere(Expression<Func<TEntity, bool>> expression)
@@ -33,21 +33,36 @@ namespace ECommerce.Application.Specifications
             WhereExpression = expression;
         }
 
-        //// Order By Condition
-        //public Expression<Func<TEntity, object>> OrderByExpression { get; private set; }
+        // Order Expression
+        public Expression<Func<TEntity, object>> OrderByNameDsc { get; private set; }
 
-        //protected void AddOrderBy(Expression<Func<TEntity, object>> expression)
-        //{
-        //    OrderByExpression = expression;
-        //}
+        public Expression<Func<TEntity, object>> OrderByNameAsc { get; private set; }
 
-        //// Order By Descending Condition
-        //public Expression<Func<TEntity, object>> OrderByDescendingExpression { get; private set; }
+        public Expression<Func<TEntity, object>> OrderByPriceAsc { get; private set; }
 
-        //protected void AddOrderByDescending(Expression<Func<TEntity, object>> expression)
-        //{
-        //    OrderByDescendingExpression = expression;
-        //}
+        public Expression<Func<TEntity, object>> OrderByPriceDsc { get; private set; }
+
+
+        protected void AddOrderByAscendingName(Expression<Func<TEntity, object>> expression)
+        {
+            OrderByNameAsc = expression;
+        }
+
+        protected void AddOrderByDescendingName(Expression<Func<TEntity, object>> expression)
+        {
+            OrderByNameDsc = expression;
+        }
+
+        protected void AddOrderByPriceAscending(Expression<Func<TEntity, object>> expression)
+        {
+            OrderByPriceAsc = expression;
+        }
+
+        protected void AddOrderByPriceDscending(Expression<Func<TEntity, object>> expression)
+        {
+            OrderByPriceDsc = expression;
+        }
+
 
         //// Paging
         //public int Skip { get; private set; }

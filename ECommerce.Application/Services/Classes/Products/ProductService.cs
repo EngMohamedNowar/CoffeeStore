@@ -13,9 +13,9 @@ namespace ECommerce.Application.Services.Classes.Products
 {
     public class ProductService(IUnitOfWork unitOfWork,IMapper mapper) : IProductService
     {
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(CancellationToken ct = default)
+        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(ProductQueryParams queryParams, CancellationToken ct = default)
         {
-            var specs = new ProductsWithCategory();
+            var specs = new ProductsWithCategory(queryParams);
             var products = await unitOfWork.GetRepository<Product>().GetAllAsync(specs,ct);
             var productsDtos = mapper.Map<IReadOnlyList<ProductDto>>(products);
             return Result<IReadOnlyList<ProductDto>>.Ok(productsDtos);
@@ -24,7 +24,7 @@ namespace ECommerce.Application.Services.Classes.Products
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)
         {
             {
-                var specs = new ProductsWithCategory(slug);
+                var specs = new ProductBySlugWithCategorySpecification(slug);
                 var product = await unitOfWork.ProductRepository().GetBySlugAsync(slug,specs,cancellationToken);
                 var productDtos = mapper.Map<ProductDto>(product);
                 return Result<ProductDto>.Ok(productDtos);
