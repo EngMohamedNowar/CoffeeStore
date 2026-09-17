@@ -6,9 +6,12 @@ namespace ECommerce.Application.Common
 {
     public class ProductQueryParams
     {
-
         public string? SearchName { get; set; }
+
         public ProductSortOptions? Sort { get; set; }
+
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 5;
     }
     public enum ProductSortOptions
     {

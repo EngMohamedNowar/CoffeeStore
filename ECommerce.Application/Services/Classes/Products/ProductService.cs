@@ -13,12 +13,15 @@ namespace ECommerce.Application.Services.Classes.Products
 {
     public class ProductService(IUnitOfWork unitOfWork,IMapper mapper) : IProductService
     {
-        public async Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(ProductQueryParams queryParams, CancellationToken ct = default)
+        public async Task<Result<PaginationResult<ProductDto>>> GetAllActiveAsync(ProductQueryParams queryParams, CancellationToken ct = default)
         {
             var specs = new ProductsWithCategory(queryParams);
             var products = await unitOfWork.GetRepository<Product>().GetAllAsync(specs,ct);
+            var countSpecs = new ProductCountSpecifications(queryParams);
             var productsDtos = mapper.Map<IReadOnlyList<ProductDto>>(products);
-            return Result<IReadOnlyList<ProductDto>>.Ok(productsDtos);
+            var count = await unitOfWork.GetRepository<Product>().CountAsync(countSpecs, ct);
+            var result = new PaginationResult<ProductDto>(queryParams.PageIndex, queryParams.PageSize, count, productsDtos);
+            return Result<PaginationResult<ProductDto>>.Ok(result);
         }
 
         public async Task<Result<ProductDto?>> GetBySlugAsync(string slug, CancellationToken cancellationToken = default)

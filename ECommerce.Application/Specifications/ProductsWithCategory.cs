@@ -14,23 +14,25 @@ namespace ECommerce.Application.Specifications
             switch (queryParams.Sort)
             {
                 case ProductSortOptions.nameAsc:
-                    AddOrderByAscendingName(p => p.Name);
+                    AddOrderBy(p => p.Name);
                     break;
 
                 case ProductSortOptions.nameDsc:
-                    AddOrderByDescendingName(p => p.Name);
+                    AddOrderByDescending(p => p.Name);
                     break;
 
                 case ProductSortOptions.priceAsc:
-                    AddOrderByPriceAscending(
+                    AddOrderBy(
                         p => p.Variants.Min(v => v.Price));
                     break;
 
                 case ProductSortOptions.priceDsc:
-                    AddOrderByPriceDscending(
+                    AddOrderByDescending(
                         p => p.Variants.Max(v => v.Price));
                     break;
             }
+
+            ApplyPaging(queryParams.PageIndex, queryParams.PageSize);
         }
     }
 }

@@ -28,15 +28,14 @@ namespace ECommerce.Infrastructure.Specifications
             if (specs.WhereExpression is not null)
                 query = query.Where(specs.WhereExpression);
 
-            if (specs.OrderByPriceDsc is not null)
-                query = query.OrderBy(specs.OrderByPriceDsc);
-            else if (specs.OrderByPriceAsc is not null)
-                query = query.OrderBy(specs.OrderByPriceAsc);
-            else if (specs.OrderByNameAsc is not null)
-                query = query.OrderBy(specs.OrderByNameAsc);
-            else if (specs.OrderByNameDsc is not null)
-                query = query.OrderBy(specs.OrderByNameDsc);
-
+            if (specs.OrderByDescending is not null)
+                query = query.OrderByDescending(specs.OrderByDescending);
+            else if (specs.OrderBy is not null)
+                query = query.OrderBy(specs.OrderBy);
+            if (specs.IsPagingEnabled)
+            {
+               query = query.Skip(specs.Skip).Take(specs.Take);
+            }
             return query;
 
         }

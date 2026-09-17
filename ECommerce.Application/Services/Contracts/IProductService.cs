@@ -8,7 +8,7 @@ namespace ECommerce.Application.Services.Contracts;
 
 public interface IProductService
 {
-    Task<Result<IReadOnlyList<ProductDto>>> GetAllActiveAsync(ProductQueryParams queryParams,
+    Task<Result<PaginationResult<ProductDto>>> GetAllActiveAsync(ProductQueryParams queryParams,
         CancellationToken ct = default);
 
     Task<Result<ProductDto>> GetBySlugAsync(

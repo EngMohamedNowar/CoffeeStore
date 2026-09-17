@@ -10,7 +10,7 @@ namespace ECommerce.Api.Controllers
     public class ProductsController(IProductService productService) : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams,CancellationToken ct = default)
+        public async Task<ActionResult<PaginationResult<ProductDto>>> GetAllProducts([FromQuery] ProductQueryParams queryParams,CancellationToken ct = default)
         {
             var result = await productService.GetAllActiveAsync(queryParams, ct);
             return ToActionResult(result);

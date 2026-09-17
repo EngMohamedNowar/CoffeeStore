@@ -15,11 +15,12 @@ namespace ECommerce.Domain.Specification
         Expression<Func<TEntity, bool>> WhereExpression { get; }
 
         // OrderBy Expression
-        Expression<Func<TEntity, object>> OrderByNameDsc { get; }
-        Expression<Func<TEntity, object>> OrderByNameAsc { get; }
-        Expression<Func<TEntity, object>> OrderByPriceDsc { get; }
-        Expression<Func<TEntity, object>> OrderByPriceAsc { get; }
+        Expression<Func<TEntity, object>> OrderBy { get; }
+        Expression<Func<TEntity, object>> OrderByDescending { get; }
 
-
+        // Pagination
+        int Take { get;}
+        int Skip { get; }
+        bool IsPagingEnabled { get; }
     }
 }

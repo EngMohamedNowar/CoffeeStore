@@ -34,46 +34,32 @@ namespace ECommerce.Application.Specifications
         }
 
         // Order Expression
-        public Expression<Func<TEntity, object>> OrderByNameDsc { get; private set; }
+        public Expression<Func<TEntity, object>> OrderBy { get; private set; }
+        public Expression<Func<TEntity, object>> OrderByDescending { get; private set; }
 
-        public Expression<Func<TEntity, object>> OrderByNameAsc { get; private set; }
-
-        public Expression<Func<TEntity, object>> OrderByPriceAsc { get; private set; }
-
-        public Expression<Func<TEntity, object>> OrderByPriceDsc { get; private set; }
-
-
-        protected void AddOrderByAscendingName(Expression<Func<TEntity, object>> expression)
+        protected void AddOrderBy(Expression<Func<TEntity, object>> expression)
         {
-            OrderByNameAsc = expression;
+            OrderBy = expression;
         }
-
-        protected void AddOrderByDescendingName(Expression<Func<TEntity, object>> expression)
+        protected void AddOrderByDescending(Expression<Func<TEntity, object>> expression)
         {
-            OrderByNameDsc = expression;
-        }
-
-        protected void AddOrderByPriceAscending(Expression<Func<TEntity, object>> expression)
-        {
-            OrderByPriceAsc = expression;
-        }
-
-        protected void AddOrderByPriceDscending(Expression<Func<TEntity, object>> expression)
-        {
-            OrderByPriceDsc = expression;
+            OrderByDescending = expression;
         }
 
 
-        //// Paging
-        //public int Skip { get; private set; }
-        //public int Take { get; private set; }
-        //public bool IsPagingEnabled { get; private set; }
+        // Paging
+        public int Skip { get; private set; }
+        public int Take { get; private set; }
+        public bool IsPagingEnabled { get; private set; }
 
-        //protected void ApplyPaging(int skip, int take)
-        //{
-        //    Skip = skip;
-        //    Take = take;
-        //    IsPagingEnabled = true;
-        //}
+        protected void ApplyPaging(int pageIndex, int pageSize)
+        {
+            pageIndex = pageIndex < 1 ? 1 : pageIndex;
+            pageSize = pageSize < 1 ? 10 : pageSize;
+
+            Skip = (pageIndex - 1) * pageSize;
+            Take = pageSize;
+            IsPagingEnabled = true;
+        }
     }
 }
