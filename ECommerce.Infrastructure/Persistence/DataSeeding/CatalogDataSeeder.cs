@@ -1,76 +1,121 @@
 ﻿using CoffeeStore.Domain.Entities.Categories;
-using CoffeeStore.Domain.Entities.Customers;
 using CoffeeStore.Domain.Entities.Products;
 using ECommerce.Domain.Common;
 using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ECommerce.Infrastructure.Persistence.DataSeeding
 {
-    public class CatalogDataSeeder(StoreDbContext context,ILogger<CatalogDataSeeder> logger) : IDataSeeder
+    public class CatalogDataSeeder(
+        StoreDbContext context,
+        ILogger<CatalogDataSeeder> logger) : IDataSeeder
     {
         public async Task SeedDataAsync(CancellationToken ct)
         {
             try
             {
-                var pendingMigrations = await context.Database.GetPendingMigrationsAsync(ct);
-                if (pendingMigrations.Any())
-                    await context.Database.MigrateAsync(ct);
+                // Apply pending migrations
+                await context.Database.MigrateAsync(ct);
 
-                var rootPath = Path.Combine(AppContext.BaseDirectory, "DataSeeding");
+                var rootPath = Path.Combine(
+                    AppContext.BaseDirectory,
+                    "DataSeeding");
 
-                await SeedIfEmpty<Category>(rootPath, "categories.json", ct);
-                await context.SaveChangesAsync(ct); // احفظ الـ Categories الأول عشان تاخد Ids حقيقية
+                // Seed Categories first
+                await SeedIfEmpty<Category>(
+                    rootPath,
+                    "categories.json",
+                    ct);
 
-                await SeedIfEmpty<Product>(rootPath, "products.json", ct);
-                await context.SaveChangesAsync(ct); // احفظ الـ Products قبل ما تضيف Variants اللي بتعتمد عليها
+                await context.SaveChangesAsync(ct);
 
-                logger.LogInformation("Seeding completed");
+                // Seed Products after Categories
+                await SeedIfEmpty<Product>(
+                    rootPath,
+                    "products.json",
+                    ct);
+
+                await context.SaveChangesAsync(ct);
+
+                logger.LogInformation(
+                    "Database migration and seeding completed successfully.");
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, ex.Message);
+                logger.LogError(
+                    ex,
+                    "An error occurred while migrating or seeding the database.");
+
                 throw;
             }
         }
-        
-        private async Task SeedIfEmpty<TEntity>(string rootPath, string fileName, CancellationToken ct = default) where TEntity : BaseEntity
+
+        private async Task SeedIfEmpty<TEntity>(
+            string rootPath,
+            string fileName,
+            CancellationToken ct = default)
+            where TEntity : BaseEntity
         {
-            if (await context.Set<TEntity>().AnyAsync())
+            // Check if the table already contains data
+            if (await context.Set<TEntity>().AnyAsync(ct))
             {
-                logger.LogInformation("Table Has Data");
+                logger.LogInformation(
+                    "{EntityName} table already contains data. Skipping seeding.",
+                    typeof(TEntity).Name);
+
                 return;
             }
+
             var filePath = Path.Combine(rootPath, fileName);
+
+            // Check if JSON file exists
             if (!File.Exists(filePath))
             {
-                logger.LogWarning($"File {fileName} Not Exists");
+                logger.LogWarning(
+                    "Seeding file {FileName} was not found at {FilePath}.",
+                    fileName,
+                    filePath);
+
                 return;
             }
-            // seeding
-            var fileStream = File.OpenRead(filePath);
 
-            var options = new JsonSerializerOptions()
+            // Read and deserialize JSON
+            await using var fileStream = File.OpenRead(filePath);
+
+            var options = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() }
+                PropertyNameCaseInsensitive = true
             };
 
-            var data = await JsonSerializer.DeserializeAsync<List<TEntity>>(fileStream,options,ct); // convert json data into objects
+            options.Converters.Add(
+                new JsonStringEnumConverter());
 
-            if (data is not null && data.Any())
+            var data = await JsonSerializer.DeserializeAsync<List<TEntity>>(
+                fileStream,
+                options,
+                ct);
+
+            if (data is null || data.Count == 0)
             {
-                await context.Set<TEntity>().AddRangeAsync(data);
+                logger.LogWarning(
+                    "No data found in {FileName}.",
+                    fileName);
+
+                return;
             }
+
+            // Add data to DbContext
+            await context.Set<TEntity>().AddRangeAsync(data, ct);
+
+            logger.LogInformation(
+                "Added {Count} {EntityName} records from {FileName}.",
+                data.Count,
+                typeof(TEntity).Name,
+                fileName);
         }
-
-
     }
 }
