@@ -8,55 +8,66 @@ namespace ECommerce.Api.Controllers
     public class ApiControllerBase : ControllerBase
     {
         [NonAction]
-        public ActionResult ToActionResult(Result result)
+        protected ActionResult ToActionResult(Result result)
         {
             if (result.IsSuccess)
             {
                 return Ok(result);
             }
-            else
-            {
-              return ToProblem(result.Errors);
-            }
-        }
-        public ActionResult<T> ToActionResult<T>(Result<T> result)
-        {
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return ToProblem(result.Errors);
-            }
+
+            return ToProblem(result.Errors);
         }
 
-        protected static ObjectResult ToProblem(IReadOnlyList<Error> errors)
+        [NonAction]
+        protected ActionResult<T> ToActionResult<T>(Result<T> result)
+        {
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return ToProblem(result.Errors);
+        }
+
+        protected static ObjectResult ToProblem(
+            IReadOnlyList<Error> errors)
         {
             var firstError = errors[0];
+
             var statusCode = firstError.ErrorType switch
             {
-                ErrorType.NotFound => StatusCodes.Status404NotFound,
-                ErrorType.Validation => StatusCodes.Status400BadRequest,
-                ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
-                ErrorType.Conflict => StatusCodes.Status409Conflict,
-                ErrorType.Forbiden => StatusCodes.Status403Forbidden,
-                _ => StatusCodes.Status500InternalServerError
+                ErrorType.NotFound =>
+                    StatusCodes.Status404NotFound,
+
+                ErrorType.Validation =>
+                    StatusCodes.Status400BadRequest,
+
+                ErrorType.Unauthorized =>
+                    StatusCodes.Status401Unauthorized,
+
+                ErrorType.Conflict =>
+                    StatusCodes.Status409Conflict,
+
+                ErrorType.Forbiden =>
+                    StatusCodes.Status403Forbidden,
+
+                _ =>
+                    StatusCodes.Status500InternalServerError
             };
-            var problems = new ProblemDetails()
+
+            var problem = new ProblemDetails
             {
                 Detail = firstError.description,
                 Title = firstError.code,
-                Status = statusCode,
-                Extensions = { ["Errors"] = errors }
+                Status = statusCode
             };
 
-            return new ObjectResult(problems)
+            problem.Extensions["Errors"] = errors;
+
+            return new ObjectResult(problem)
             {
                 StatusCode = statusCode
             };
-
         }
-
     }
 }

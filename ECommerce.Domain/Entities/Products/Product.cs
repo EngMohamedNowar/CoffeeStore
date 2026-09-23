@@ -14,7 +14,6 @@ public class Product : BaseEntity
     public string? ImageUrl { get; set; }
     public bool IsActive { get; set; } = true;
     public bool IsFeatured { get; set; } = false;
-
     public Guid CategoryId { get; set; }
     public Category Category { get; set; } = null!;
 

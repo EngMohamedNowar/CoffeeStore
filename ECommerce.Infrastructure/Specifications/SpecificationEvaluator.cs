@@ -9,7 +9,11 @@ namespace ECommerce.Infrastructure.Specifications
 {
     public static class SpecificationEvaluator
     {
-        public static IQueryable<TEntity> CreateQuery<TEntity>(IQueryable<TEntity> inputQuery,ISpecification<TEntity> specs) where TEntity : BaseEntity
+        public static IQueryable<TEntity>
+            CreateQuery<TEntity>
+            (IQueryable<TEntity> inputQuery,
+            ISpecification<TEntity> specs) where TEntity
+            : BaseEntity
         {
             var query = inputQuery;
 
@@ -24,6 +28,14 @@ namespace ECommerce.Infrastructure.Specifications
             if (specs.WhereExpression is not null)
                 query = query.Where(specs.WhereExpression);
 
+            if (specs.OrderByDescending is not null)
+                query = query.OrderByDescending(specs.OrderByDescending);
+            else if (specs.OrderBy is not null)
+                query = query.OrderBy(specs.OrderBy);
+            if (specs.IsPagingEnabled)
+            {
+               query = query.Skip(specs.Skip).Take(specs.Take);
+            }
             return query;
 
         }

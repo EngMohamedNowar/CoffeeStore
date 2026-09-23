@@ -29,4 +29,9 @@ public class GenericRepository<TEntity>(StoreDbContext context)
     {
         return await SpecificationEvaluator.CreateQuery(context.Set<TEntity>(), specs).ToListAsync(ct);
     }
+
+    public async Task<int> CountAsync(ISpecification<TEntity> specs, CancellationToken ct = default)
+    {
+        return await SpecificationEvaluator.CreateQuery(context.Set<TEntity>(), specs).CountAsync(ct);
+    }
 }
