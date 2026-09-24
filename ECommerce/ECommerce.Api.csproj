@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="DataSeeding\categories.json" />
+    <Content Remove="DataSeeding\products.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.11">
       <PrivateAssets>all</PrivateAssets>
@@ -28,4 +33,14 @@
     <Folder Include="Files\Images\Products\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="DataSeeding\categories.json" />
+    <None Include="DataSeeding\products.json" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Include="DataSeeding\*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

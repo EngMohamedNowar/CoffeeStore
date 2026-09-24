@@ -3,6 +3,7 @@ using ECommerce.Application;
 using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure;
 using ECommerce.Infrastructure.Persistence.Data;
+using ECommerce.Infrastructure.Persistence.Identity.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi;
@@ -25,15 +26,17 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddApplictaionServices();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.User.RequireUniqueEmail = true;
-})
-.AddEntityFrameworkStores<StoreDbContext>()
-.AddDefaultTokenProviders();
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+//{
+//    options.Password.RequireDigit = true;
+//    options.Password.RequiredLength = 6;
+//    options.Password.RequireNonAlphanumeric = true;
+//    options.User.RequireUniqueEmail = true;
+//})
+//.AddEntityFrameworkStores<StoreDbContext>()
+//.AddDefaultTokenProviders();
+
+
 
 var app = builder.Build();
 
