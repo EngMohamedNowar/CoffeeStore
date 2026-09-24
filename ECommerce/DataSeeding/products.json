@@ -1,0 +1,100 @@
+[
+  {
+    "id": "c2b2d000-0000-0000-0000-000000000001",
+    "name": "Ethiopian Yirgacheffe",
+    "slug": "ethiopian-yirgacheffe",
+    "description": "A bright, floral coffee with notes of citrus and jasmine.",
+    "origin": "Ethiopia",
+    "roastLevel": "Light",
+    "imageUrl": null,
+    "isActive": true,
+    "isFeatured": true,
+    "categoryId": "b1a1c000-0000-0000-0000-000000000001",
+    "variants": [
+      {
+        "weightInGrams": 250,
+        "grindType": "WholeBean",
+        "price": 12.50,
+        "stockQuantity": 100,
+        "sku": "ETH-YIRG-250-WB"
+      },
+      {
+        "weightInGrams": 1000,
+        "grindType": "WholeBean",
+        "price": 42.00,
+        "stockQuantity": 40,
+        "sku": "ETH-YIRG-1000-WB"
+      }
+    ]
+  },
+  {
+    "id": "c2b2d000-0000-0000-0000-000000000002",
+    "name": "Vietnamese Robusta",
+    "slug": "vietnamese-robusta",
+    "description": "Bold and full-bodied robusta beans from Vietnam.",
+    "origin": "Vietnam",
+    "roastLevel": "Dark",
+    "imageUrl": null,
+    "isActive": true,
+    "isFeatured": false,
+    "categoryId": "b1a1c000-0000-0000-0000-000000000002",
+    "variants": [
+      {
+        "weightInGrams": 250,
+        "grindType": "Coarse",
+        "price": 8.75,
+        "stockQuantity": 80,
+        "sku": "VNM-ROB-250-CR"
+      }
+    ]
+  },
+  {
+    "id": "c2b2d000-0000-0000-0000-000000000003",
+    "name": "Colombian Medium Ground",
+    "slug": "colombian-medium-ground",
+    "description": "Smooth, well-balanced ground coffee from Colombia.",
+    "origin": "Colombia",
+    "roastLevel": "Medium",
+    "imageUrl": null,
+    "isActive": true,
+    "isFeatured": true,
+    "categoryId": "b1a1c000-0000-0000-0000-000000000003",
+    "variants": [
+      {
+        "weightInGrams": 500,
+        "grindType": "Medium",
+        "price": 15.00,
+        "stockQuantity": 60,
+        "sku": "COL-MED-500-MD"
+      },
+      {
+        "weightInGrams": 250,
+        "grindType": "Fine",
+        "price": 9.50,
+        "stockQuantity": 90,
+        "sku": "COL-MED-250-FN"
+      }
+    ]
+  },
+  {
+    "id": "c2b2d000-0000-0000-0000-000000000004",
+    "name": "Espresso Pods Classic",
+    "slug": "espresso-pods-classic",
+    "description": "Convenient espresso pods for a quick, rich shot.",
+    "origin": "Brazil",
+    "roastLevel": "MediumDark",
+    "imageUrl": null,
+    "isActive": true,
+    "isFeatured": false,
+    "categoryId": "b1a1c000-0000-0000-0000-000000000004",
+    "variants": [
+      {
+        "weightInGrams": 100,
+        "grindType": "ExtraFine",
+        "price": 18.00,
+        "stockQuantity": 120,
+        "sku": "ESP-POD-100-XF"
+      }
+    ]
+  }
+]

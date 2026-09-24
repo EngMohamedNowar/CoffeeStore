@@ -1,0 +1,30 @@
+[
+  {
+    "id": "b1a1c000-0000-0000-0000-000000000001",
+    "name": "Arabica Beans",
+    "slug": "arabica-beans",
+    "description": "Premium single-origin arabica coffee beans.",
+    "imageUrl": null
+  },
+  {
+    "id": "b1a1c000-0000-0000-0000-000000000002",
+    "name": "Robusta Beans",
+    "slug": "robusta-beans",
+    "description": "Strong, bold robusta coffee beans.",
+    "imageUrl": null
+  },
+  {
+    "id": "b1a1c000-0000-0000-0000-000000000003",
+    "name": "Ground Coffee",
+    "slug": "ground-coffee",
+    "description": "Freshly ground coffee, ready to brew.",
+    "imageUrl": null
+  },
+  {
+    "id": "b1a1c000-0000-0000-0000-000000000004",
+    "name": "Coffee Pods",
+    "slug": "coffee-pods",
+    "description": "Convenient coffee pods and capsules.",
+    "imageUrl": null
+  }
+]
