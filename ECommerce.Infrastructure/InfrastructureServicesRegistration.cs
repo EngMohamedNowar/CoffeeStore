@@ -1,6 +1,8 @@
-﻿using ECommerce.Domain.Contracts;
+﻿using ECommerce.Application.Services.Contracts;
+using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Contracts.Repositories;
 using ECommerce.Domain.Entities.Identity;
+using ECommerce.Infrastructure.Identity.Services;
 using ECommerce.Infrastructure.Persistence.Data;
 using ECommerce.Infrastructure.Persistence.DataSeeding;
 using ECommerce.Infrastructure.Persistence.Identity.Data;
@@ -48,6 +50,8 @@ namespace ECommerce.Infrastructure
 
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
+
+            services.AddScoped<IIdentitityServices, IdentityServices>();
             return services;
         }
     }
