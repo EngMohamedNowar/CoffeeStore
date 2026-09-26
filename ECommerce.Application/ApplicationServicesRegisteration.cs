@@ -1,4 +1,5 @@
-﻿using ECommerce.Application.Services.Classes.Baskets;
+﻿using ECommerce.Application.Services.Classes.Authentications;
+using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
 using ECommerce.Application.Services.Classes.Products;
 using ECommerce.Application.Services.Contracts;
@@ -17,6 +18,7 @@ namespace ECommerce.Application
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<ICacheServices, CacheServices>();
+            services.AddScoped<IAuthenticationService, AuthenticationsServices>();
             return services;
         }
     }
