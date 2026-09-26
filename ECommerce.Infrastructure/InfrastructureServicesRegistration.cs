@@ -44,7 +44,7 @@ namespace ECommerce.Infrastructure
             });
 
 
-            services.AddIdentityCore<ApplicationUser>()
+            services.AddIdentityCore<ApplicationUser>(option=> { option.User.RequireUniqueEmail = true; })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<StoreIdentityDbContext>();
 

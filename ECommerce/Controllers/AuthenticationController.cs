@@ -6,11 +6,18 @@ namespace ECommerce.Api.Controllers
 {
     public class AuthenticationController(IAuthenticationService authentication)  : ApiControllerBase
     {
+        [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto login,CancellationToken ct)
         {
             var result = await authentication.LoginAsync(login, ct);
             return ToActionResult(result);
+        }
 
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Registration(RegistrationDto registration, CancellationToken ct)
+        {
+            var result = await authentication.RegistrationAsync(registration, ct);
+            return ToActionResult(result);
         }
     }
 }

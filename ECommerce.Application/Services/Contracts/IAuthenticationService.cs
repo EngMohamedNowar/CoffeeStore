@@ -9,5 +9,7 @@ namespace ECommerce.Application.Services.Contracts
     public interface IAuthenticationService
     {
         Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default);
+        Task<Result<UserDto>> RegistrationAsync(RegistrationDto registration, CancellationToken ct = default);
+
     }
 }

@@ -30,6 +30,34 @@ namespace ECommerce.Application.Services.Classes.Authentications
             });
 
             }
+
+        public async Task<Result<UserDto>> RegistrationAsync(
+            RegistrationDto registration,
+            CancellationToken ct = default)
+        {
+            var userRegistration =
+                await identitityServices.CreateUserAsync(registration, ct);
+
+            if (!userRegistration.IsSuccess)
+            {
+                return Result<UserDto>.Fail(userRegistration.Errors);
+            }
+
+            var user = userRegistration.Value;
+
+            if (user is null)
+            {
+                return Result<UserDto>.Fail(userRegistration.Errors);
+            }
+
+            return Result<UserDto>.Ok(new UserDto
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = "Token"
+            });
         }
+
     }
+}
 
