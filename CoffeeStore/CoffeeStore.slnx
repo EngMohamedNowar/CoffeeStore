@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="ECommerce/ECommerce.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/Domain/">
+    <Project Path="ECommerce.Domain/ECommerce.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/Application/">
+    <Project Path="ECommerce.Application/ECommerce.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/Infrastructure/">
+    <Project Path="ECommerce.Infrastructure/ECommerce.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ECommerce.Tests/ECommerce.Tests.csproj" />
+  </Folder>
+  <Folder Name="/solution items/">
+    <File Path="docker-compose.yml" />
+    <File Path=".env.example" />
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path="Directory.Build.props" />
+    <File Path="README.md" />
+  </Folder>
+</Solution>

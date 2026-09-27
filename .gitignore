@@ -25,6 +25,13 @@ TestResults/
 *.nupkg
 *.snupkg
 
+# Local secrets
+.env
+*.db
+*.db-shm
+*.db-wal
+appsettings.*.local.json
+
 # OS files
 .DS_Store
 Thumbs.db

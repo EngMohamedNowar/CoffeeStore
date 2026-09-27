@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore CoffeeStore/CoffeeStore.slnx
+
+      - name: Build
+        run: dotnet build CoffeeStore/CoffeeStore.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test CoffeeStore/CoffeeStore.slnx --configuration Release --no-build --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: CoffeeStore/tests/**/TestResults/**/coverage.cobertura.xml
+          if-no-files-found: ignore
