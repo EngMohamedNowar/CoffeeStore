@@ -83,10 +83,12 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+var staticFilesRoot = Path.Combine(builder.Environment.ContentRootPath, "Files");
+Directory.CreateDirectory(staticFilesRoot);
+
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(builder.Environment.ContentRootPath, "Files")),
+    FileProvider = new PhysicalFileProvider(staticFilesRoot),
     RequestPath = "/Files"
 });
 

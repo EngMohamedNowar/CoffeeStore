@@ -1,11 +1,13 @@
-﻿using ECommerce.Application.Services.Classes.Authentications;
-using ECommerce.Application.Services.Classes.Baskets;
+﻿using AutoMapper;
+using ECommerce.Application.MappingProfiles.Products;
+using ECommerce.Application.Services.Classes.Authentications;using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
 using ECommerce.Application.Services.Classes.Products;
 using ECommerce.Application.Services.Contracts;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace ECommerce.Application;
 
@@ -15,7 +17,8 @@ public static class ApplicationServicesRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddAutoMapper(_ => { }, typeof(ApplicationServicesRegistration).Assembly);
+        services.AddSingleton<ProductProfile>();
+        services.AddAutoMapper(BuildMapperConfiguration, Array.Empty<Assembly>());
         services.AddValidatorsFromAssembly(typeof(ApplicationServicesRegistration).Assembly);
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
@@ -27,5 +30,10 @@ public static class ApplicationServicesRegistration
         services.AddScoped<ITokenServices, TokenServices>();
 
         return services;
+    }
+
+    private static void BuildMapperConfiguration(IServiceProvider sp, IMapperConfigurationExpression cfg)
+    {
+        cfg.AddProfile(sp.GetRequiredService<ProductProfile>());
     }
 }
