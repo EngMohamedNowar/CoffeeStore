@@ -1,8 +1,8 @@
-﻿using ECommerce.Application.Common;
+using ECommerce.Application.Common;
 
 namespace ECommerce.Application.Services.Contracts;
 
 public interface ITokenServices
 {
-    Task<Result<string>> CreateTokenAsync(string userId, string email, string userName, CancellationToken ct = default);
+    Task<Result<string>> CreateTokenAsync(string userId, string email, string userName, IReadOnlyList<string> roles, CancellationToken ct = default);
 }

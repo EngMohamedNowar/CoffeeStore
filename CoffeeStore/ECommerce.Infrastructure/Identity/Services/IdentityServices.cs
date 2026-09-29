@@ -1,4 +1,4 @@
-﻿using ECommerce.Application.Common;
+using ECommerce.Application.Common;
 using ECommerce.Application.DTOs.Identity;
 using ECommerce.Application.Services.Contracts;
 using ECommerce.Domain.Entities.Identity;
@@ -56,4 +56,18 @@ public class IdentityServices(UserManager<ApplicationUser> userManager) : IIdent
 
     private static IdentityUserResult ToResult(ApplicationUser user)
         => new(user.Id, user.DisplayName, user.Email ?? string.Empty, user.UserName ?? string.Empty);
+
+
+
+    public async Task<Result<IReadOnlyList<string>>> GetUserRoleAsync(string email, CancellationToken ct = default)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user is null)
+        {
+            return Result<IReadOnlyList<string>>.Fail(Error.InvalidCredentials());
+        }
+        var roles = await userManager.GetRolesAsync(user);
+        return Result<IReadOnlyList<string>>.Ok(roles.ToList());
+
+    }
 }

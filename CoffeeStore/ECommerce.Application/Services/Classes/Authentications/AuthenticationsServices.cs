@@ -1,4 +1,4 @@
-﻿using ECommerce.Application.Common;
+using ECommerce.Application.Common;
 using ECommerce.Application.DTOs.Identity;
 using ECommerce.Application.Services.Contracts;
 
@@ -24,7 +24,9 @@ public class AuthenticationsServices(
 
         var user = userResult.Value!;
 
-        var token = await tokenServices.CreateTokenAsync(user.Id, user.Email, user.UserName, ct);
+        var roleResult = await identitityServices.GetUserRoleAsync(loginDto.Email, ct);
+
+        var token = await tokenServices.CreateTokenAsync(user.Id, user.Email, user.UserName,roleResult.Value, ct);
         if (!token.IsSuccess)
         {
             return Result<UserDto>.Fail(token.Errors);
@@ -47,8 +49,9 @@ public class AuthenticationsServices(
         }
 
         var user = userRegistration.Value!;
+        var roleResult = await identitityServices.GetUserRoleAsync(userRegistration.Value.Email, ct);
 
-        var token = await tokenServices.CreateTokenAsync(user.Id, user.Email, user.UserName, ct);
+        var token = await tokenServices.CreateTokenAsync(user.Id, user.Email, user.UserName,roleResult.Value, ct);
         if (!token.IsSuccess)
         {
             return Result<UserDto>.Fail(token.Errors);
