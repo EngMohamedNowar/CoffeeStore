@@ -1,4 +1,4 @@
-﻿using ECommerce.Application.Services.Contracts;
+using ECommerce.Application.Services.Contracts;
 using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Contracts.Repositories;
 using ECommerce.Domain.Entities.Identity;
@@ -7,6 +7,7 @@ using ECommerce.Infrastructure.Persistence.Data;
 using ECommerce.Infrastructure.Persistence.DataSeeding;
 using ECommerce.Infrastructure.Persistence.Identity.Data;
 using ECommerce.Infrastructure.Persistence.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,11 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICacheRepository, CacheRepository>();
         services.AddScoped<IIdentitityServices, IdentityServices>();
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        });
 
         return services;
     }
