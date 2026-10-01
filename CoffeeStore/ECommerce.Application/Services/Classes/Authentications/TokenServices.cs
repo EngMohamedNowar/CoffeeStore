@@ -27,6 +27,7 @@ public class TokenServices(IOptions<JwtOptions> options) : ITokenServices
         string userId,
         string email,
         string userName,
+        IReadOnlyList<string> roles,
         CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(_options.SigningKey) || _options.SigningKey.Length < 32)
@@ -45,9 +46,12 @@ public class TokenServices(IOptions<JwtOptions> options) : ITokenServices
             new(JwtRegisteredClaimNames.Sub, userId),
             new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.NameIdentifier, userId),
             new(ClaimTypes.Name, userName)
         };
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role,role));
+        }
 
         var token = new JwtSecurityToken(
             issuer: _options.Issuer,
