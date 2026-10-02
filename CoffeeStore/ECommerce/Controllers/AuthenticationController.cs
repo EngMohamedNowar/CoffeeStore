@@ -1,4 +1,4 @@
-﻿using ECommerce.Application.DTOs.Identity;
+using ECommerce.Application.DTOs.Identity;
 using ECommerce.Application.Services.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,4 +19,13 @@ public class AuthenticationController(IAuthenticationService authentication) : A
         var result = await authentication.RegistrationAsync(registration, ct);
         return ToActionResult(result);
     }
+
+    [HttpGet("email")]
+    public async Task<ActionResult<bool>> CheckUserByEmail(string email, CancellationToken cancellationToken)
+    {
+        var result = await authentication.CheckEmailExistsAsync(email, cancellationToken);
+        return ToActionResult(result);
+    }
+
+
 }

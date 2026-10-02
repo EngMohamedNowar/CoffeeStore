@@ -9,6 +9,16 @@ public class AuthenticationsServices(
     IIdentityService identityService,
     ITokenServices tokenServices) : IAuthenticationService
 {
+    public async Task<Result<bool>> CheckEmailExistsAsync(string email, CancellationToken ct)
+    {
+        var result = await identityService.GetUserByEmailAsync(email, ct);
+        if (result.IsSuccess)
+        {
+            return Result<bool>.Ok(true);
+        }
+        return Result<bool>.Fail(result.Errors);
+    }
+
     public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
     {
         var userResult = await identityService.ValidateCredentialsAsync(
