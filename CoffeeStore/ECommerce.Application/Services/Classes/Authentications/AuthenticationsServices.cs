@@ -19,6 +19,37 @@ public class AuthenticationsServices(
         return Result<bool>.Fail(result.Errors);
     }
 
+    public async Task<Result<UserDto>> GetCurrentUserAsync(string email, CancellationToken cancellationToken)
+    {
+        var result = await identityService.GetUserByEmailAsync(email, cancellationToken);
+        if (!result.IsSuccess || result.Value is null)
+        {
+            return Result<UserDto>.Fail(result.Errors);
+        }
+
+        var user = result.Value;
+        var roles = await identityService.GetRolesAsync(user.Id, cancellationToken);
+        var token = await tokenServices.CreateTokenAsync(
+            user.Id,
+            user.Email,
+            user.UserName,
+            roles,
+            cancellationToken);
+
+        if (!token.IsSuccess)
+        {
+            return Result<UserDto>.Fail(token.Errors);
+        }
+
+        return Result<UserDto>.Ok(new UserDto
+        {
+            Id = user.Id,
+            DisplayName = user.DisplayName ?? string.Empty,
+            Email = user.Email,
+            Token = token.Value!
+        });
+    }
+
     public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
     {
         var userResult = await identityService.ValidateCredentialsAsync(
@@ -57,7 +88,7 @@ public class AuthenticationsServices(
         var roles = await identityService.GetRolesAsync(user.Id, ct);
 
         var token = await tokenServices.CreateTokenAsync(
-            user.Id.ToString(),
+            user.Id,
             user.Email,
             user.DisplayName ?? user.Email,
             roles,
@@ -70,6 +101,7 @@ public class AuthenticationsServices(
 
         return Result<UserDto>.Ok(new UserDto
         {
+            Id = user.Id,
             Email = user.Email,
             DisplayName = user.DisplayName ?? string.Empty,
             Token = token.Value!
