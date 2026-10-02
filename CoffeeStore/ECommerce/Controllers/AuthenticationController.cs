@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using ECommerce.Application.DTOs.Identity;
 using ECommerce.Application.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Api.Controllers;
@@ -29,6 +30,7 @@ public class AuthenticationController(IAuthenticationService authentication) : A
     }
 
     [HttpGet("currentUser")]
+    [Authorize]
     public async Task<ActionResult<UserDto>>GetCurrentUser( CancellationToken cancellationToken)
     {
         var email = User.FindFirstValue(ClaimTypes.Email) ?? throw new UnauthorizedAccessException();
