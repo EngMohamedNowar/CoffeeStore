@@ -1,3 +1,5 @@
+using System.Text;
+using ECommerce.Application.Services.Classes.Authentications;
 using ECommerce.Application.Services.Contracts;
 using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Contracts.Repositories;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 
 namespace ECommerce.Infrastructure;
@@ -47,11 +50,33 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICacheRepository, CacheRepository>();
-        services.AddScoped<IIdentitityServices, IdentityServices>();
+        services.AddScoped<IIdentityService, IdentityService>();
+        var jwtOptions = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
+                          ?? new JwtOptions();
+
+        if (string.IsNullOrWhiteSpace(jwtOptions.SigningKey))
+        {
+            throw new InvalidOperationException(
+                "Jwt:SigningKey is not configured. Set it through user-secrets, environment variables, or a secret store before starting the API.");
+        }
+
         services.AddAuthentication(opt =>
         {
             opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(opt =>
+        {
+            opt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtOptions.Issuer,
+                ValidAudience = jwtOptions.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
+                ClockSkew = TimeSpan.Zero
+            };
         });
 
         return services;

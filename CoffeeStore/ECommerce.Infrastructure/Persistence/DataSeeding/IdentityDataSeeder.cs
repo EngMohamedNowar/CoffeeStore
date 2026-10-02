@@ -25,10 +25,12 @@ public class IdentityDataSeeder(
             await context.Database.MigrateAsync(ct);
         }
 
-        if (!await roleManager.Roles.AnyAsync(ct))
+        foreach (var roleName in new[] { Roles.Admin, Roles.SuperAdmin, Roles.User })
         {
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
-            await roleManager.CreateAsync(new IdentityRole("SuperAdmin"));
+            if (!await roleManager.RoleExistsAsync(roleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole(roleName));
+            }
         }
 
         if (await userManager.Users.AnyAsync(ct))
@@ -51,7 +53,7 @@ public class IdentityDataSeeder(
             return;
         }
 
-        await userManager.AddToRoleAsync(admin, "Admin");
+        await userManager.AddToRoleAsync(admin, Roles.Admin);
     }
 
     private (ApplicationUser Admin, string Password)? ReadAdminConfig()
