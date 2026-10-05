@@ -32,6 +32,10 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired()
             .HasColumnType("decimal(10,2)");
 
+        builder.Property(o => o.DeliveryMethodPrice)
+            .IsRequired()
+            .HasColumnType("decimal(10,2)");
+
         builder.Property(o => o.UserEmail)
             .IsRequired()
             .HasMaxLength(200);
