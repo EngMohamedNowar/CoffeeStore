@@ -38,5 +38,14 @@ public class AuthenticationController(IAuthenticationService authentication) : A
         return ToActionResult(result);
     }
 
+    [HttpGet("currentAddress")]
+    [Authorize]
+    public async Task<ActionResult<AddressDto>> GetCurrentAddress(CancellationToken cancellationToken)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email) ?? throw new UnauthorizedAccessException();
+        var result = await authentication.GetCurrentUserAddressAsync(email, cancellationToken);
+        return ToActionResult(result);
+    }
+
 
 }

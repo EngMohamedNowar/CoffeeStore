@@ -1,9 +1,8 @@
-namespace ECommerce.Domain.Entities.Identity;
+namespace ECommerce.Application.DTOs.Identity;
 
-public class Address
+public class AddressDto
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
-
+    public Guid Id { get; set; }
     public string Label { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
@@ -14,6 +13,6 @@ public class Address
     public string? Notes { get; set; }
     public bool IsDefault { get; set; }
 
-    public string UserId { get; set; } = string.Empty;
-    public ApplicationUser User { get; set; } = null!;
+    public string FullName =>
+        string.IsNullOrWhiteSpace(LastName) ? FirstName : $"{FirstName} {LastName}";
 }
