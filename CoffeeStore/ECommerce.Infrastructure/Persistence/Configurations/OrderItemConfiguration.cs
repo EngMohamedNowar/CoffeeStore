@@ -1,4 +1,5 @@
 using ECommerce.Domain.Entities.Orders;
+using ECommerce.Domain.Entities.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,24 +13,35 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         builder.HasKey(i => i.Id);
 
-        builder.Property(i => i.ProductNameSnapshot)
-            .IsRequired()
-            .HasMaxLength(150);
-
-        builder.Property(i => i.UnitPriceSnapshot)
-            .IsRequired()
-            .HasColumnType("decimal(10,2)");
-
         builder.Property(i => i.Quantity)
             .IsRequired();
 
-        builder.HasOne(i => i.ProductVariant)
-            .WithMany()
-            .HasForeignKey(i => i.ProductVariantId)
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.Ignore(i => i.LineTotal);
 
-        builder.Ignore(i => i.LineTotal); // computed property, not mapped
+        builder.OwnsOne(i => i.ItemOrdered, itemOrdered =>
+        {
+            itemOrdered.Property(p => p.ProductVariantId)
+                .HasColumnName("ProductVariantId");
 
-        builder.HasQueryFilter(i => !i.IsDeleted);
+            itemOrdered.Property(p => p.ProductName)
+                .HasColumnName("ProductNameSnapshot")
+                .IsRequired()
+                .HasMaxLength(150);
+
+            itemOrdered.Property(p => p.WeightInGrams)
+                .HasColumnName("WeightInGramsSnapshot");
+
+            itemOrdered.Property(p => p.UnitPrice)
+                .HasColumnName("UnitPriceSnapshot")
+                .HasColumnType("decimal(10,2)")
+                .IsRequired();
+
+            itemOrdered.WithOwner();
+
+            itemOrdered.HasOne<ProductVariant>()
+                .WithMany()
+                .HasForeignKey("ProductVariantId")
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }

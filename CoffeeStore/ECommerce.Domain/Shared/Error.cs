@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Application.Common;
+namespace ECommerce.Domain.Shared;
 
 public record Error(string code, string description, ErrorType ErrorType = ErrorType.Failure)
 {

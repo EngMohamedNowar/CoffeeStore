@@ -32,17 +32,42 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .IsRequired()
             .HasColumnType("decimal(10,2)");
 
-        builder.Property(o => o.TotalAmount)
+        builder.Property(o => o.UserEmail)
             .IsRequired()
-            .HasColumnType("decimal(10,2)");
+            .HasMaxLength(200);
 
-        builder.HasOne(o => o.ShippingAddress)
+        builder.OwnsOne(o => o.ShipToAddress, shipTo =>
+        {
+            shipTo.Property(a => a.FirstName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            shipTo.Property(a => a.LastName)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            shipTo.Property(a => a.Street)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            shipTo.Property(a => a.City)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            shipTo.Property(a => a.Country)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            shipTo.WithOwner();
+        });
+
+        builder.HasOne(o => o.DeliveryMethod)
             .WithMany()
-            .HasForeignKey(o => o.ShippingAddressId)
+            .HasForeignKey(o => o.DeliveryMethodId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(o => o.Items)
-            .WithOne(i => i.Order)
+            .WithOne()
             .HasForeignKey(i => i.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
