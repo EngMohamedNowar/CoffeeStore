@@ -24,7 +24,7 @@ public class TokenServices(IOptions<JwtOptions> options) : ITokenServices
     private readonly JwtOptions _options = options.Value;
 
     public Task<Result<string>> CreateTokenAsync(
-        string userId,
+        Guid userId,
         string email,
         string userName,
         IReadOnlyList<string> roles,
@@ -43,7 +43,7 @@ public class TokenServices(IOptions<JwtOptions> options) : ITokenServices
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new(JwtRegisteredClaimNames.Email, email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.Name, userName)

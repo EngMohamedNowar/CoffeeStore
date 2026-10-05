@@ -143,7 +143,7 @@ public sealed class IdentityService(UserManager<ApplicationUser> userManager) : 
     }
 
     private static AuthUserSnapshot ToSnapshot(ApplicationUser user)
-        => new(Guid.Parse(user.Id), user.Email ?? string.Empty, user.DisplayName);
+        => new(Guid.Parse(user.Id), user.Email ?? string.Empty, user.DisplayName, user.UserName ?? string.Empty);
 
     private static string Describe(IdentityResult result)
         => string.Join(" ", result.Errors.Select(e => e.Description));
