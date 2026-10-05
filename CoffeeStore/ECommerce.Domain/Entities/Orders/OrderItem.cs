@@ -1,20 +1,42 @@
-using ECommerce.Domain.Entities.Products;
-using ECommerce.Domain.Common;
+using ECommerce.Domain.Errors;
+using ECommerce.Domain.Shared;
 
 namespace ECommerce.Domain.Entities.Orders;
 
-public class OrderItem : BaseEntity
+public sealed class OrderItem
 {
-    public Guid OrderId { get; set; }
-    public Order Order { get; set; } = null!;
+    private OrderItem()
+    {
+    }
 
-    public Guid ProductVariantId { get; set; }
-    public ProductVariant ProductVariant { get; set; } = null!;
+    public Guid Id { get; private set; }
+    public Guid OrderId { get; private set; }
+    public ProductItemOrdered ItemOrdered { get; private set; } = null!;
+    public int Quantity { get; private set; }
 
-    public string ProductNameSnapshot { get; set; } = string.Empty;
-    public int WeightInGramsSnapshot { get; set; }
-    public decimal UnitPriceSnapshot { get; set; }
+    public decimal LineTotal => ItemOrdered.UnitPrice * Quantity;
 
-    public int Quantity { get; set; }
-    public decimal LineTotal => UnitPriceSnapshot * Quantity;
+    internal static Result<OrderItem> Create(
+        Guid id,
+        ProductItemOrdered itemOrdered,
+        int quantity)
+    {
+        if (id == Guid.Empty)
+            return Result<OrderItem>.Failure(OrderErrors.InvalidItemId);
+
+        if (itemOrdered is null)
+            return Result<OrderItem>.Failure(OrderErrors.InvalidProductId);
+
+        if (quantity < 1)
+            return Result<OrderItem>.Failure(OrderErrors.InvalidQuantity);
+
+        return Result<OrderItem>.Success(new OrderItem
+        {
+            Id = id,
+            ItemOrdered = itemOrdered,
+            Quantity = quantity
+        });
+    }
+
+    internal void AssignOrder(Guid orderId) => OrderId = orderId;
 }

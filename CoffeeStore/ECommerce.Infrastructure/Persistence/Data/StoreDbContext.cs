@@ -27,6 +27,7 @@ namespace ECommerce.Infrastructure.Persistence.Data
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<DeliveryMethod> DeliveryMethods => Set<DeliveryMethod>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
