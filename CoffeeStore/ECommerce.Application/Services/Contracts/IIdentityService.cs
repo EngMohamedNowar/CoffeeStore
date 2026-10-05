@@ -40,4 +40,26 @@ public interface IIdentityService
     Task<IReadOnlyList<string>> GetRolesAsync(
         Guid userId,
         CancellationToken cancellationToken = default);
+
+    Task<Result<AddressDto>> GetCurrentUserAddressAsync(string email, CancellationToken ct = default);
+
+    Task<Result<IReadOnlyList<AddressDto>>> GetAddressesAsync(
+        string email,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<AddressDto>> AddAddressAsync(
+        string email,
+        AddressDto address,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<AddressDto>> UpdateAddressAsync(
+        string email,
+        Guid addressId,
+        AddressDto address,
+        CancellationToken cancellationToken = default);
+
+    Task<Result> DeleteAddressAsync(
+        string email,
+        Guid addressId,
+        CancellationToken cancellationToken = default);
 }

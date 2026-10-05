@@ -50,6 +50,11 @@ public class AuthenticationsServices(
         });
     }
 
+    public async Task<Result<AddressDto>> GetCurrentUserAddressAsync(string email, CancellationToken ct = default)
+    {
+        return await identityService.GetCurrentUserAddressAsync(email, ct);
+    }
+
     public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto, CancellationToken ct = default)
     {
         var userResult = await identityService.ValidateCredentialsAsync(
