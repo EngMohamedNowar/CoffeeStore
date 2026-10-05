@@ -5,8 +5,14 @@ public static class OrderErrors
     public static readonly Error InvalidId =
         Error.Validation("Order.InvalidId", "Order id is required.");
 
+    public static readonly Error CustomerIdRequired =
+        Error.Validation("Order.CustomerIdRequired", "Customer id is required.");
+
     public static readonly Error InvalidUserId =
         Error.Validation("Order.InvalidUserId", "User id is required.");
+
+    public static readonly Error InvalidEmail =
+        Error.Validation("Order.InvalidEmail", "Customer email is required.");
 
     public static readonly Error InvalidItemId =
         Error.Validation("Order.InvalidItemId", "Order item id is required.");
@@ -46,6 +52,9 @@ public static class OrderErrors
 
     public static readonly Error DeliveryMethodUnavailable =
         Error.Validation("Order.DeliveryMethodUnavailable", "The selected delivery method is not available.");
+
+    public static readonly Error InvalidShippingFee =
+        Error.Validation("Order.InvalidShippingFee", "Shipping fee cannot be negative.");
 
     public static readonly Error ShippingAddressRequired =
         Error.Validation("Order.ShippingAddressRequired", "Shipping address is required.");
