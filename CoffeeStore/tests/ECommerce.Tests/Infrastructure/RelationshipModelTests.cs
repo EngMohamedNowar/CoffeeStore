@@ -55,7 +55,7 @@ public class RelationshipModelTests
         // CustomerConfiguration still mapped it, which broke model building.
         Assert.Contains(address.GetProperties(), p => p.Name == nameof(StoreAddress.CustomerId));
 
-        var foreignKey = Assert.Single(address.GetForeignKeys().Where(fk => fk.PrincipalEntityType == customer));
+        var foreignKey = Assert.Single(address.GetForeignKeys(), fk => fk.PrincipalEntityType == customer);
         Assert.Equal(nameof(StoreAddress.CustomerId), foreignKey.Properties.Single().Name);
         Assert.Equal(DeleteBehavior.Cascade, foreignKey.DeleteBehavior);
 
@@ -72,7 +72,7 @@ public class RelationshipModelTests
         var customer = model.FindEntityType(typeof(Customer))!;
         var cart = model.FindEntityType(typeof(Cart))!;
 
-        var foreignKey = Assert.Single(cart.GetForeignKeys().Where(fk => fk.PrincipalEntityType == customer));
+        var foreignKey = Assert.Single(cart.GetForeignKeys(), fk => fk.PrincipalEntityType == customer);
         Assert.Equal(nameof(Cart.CustomerId), foreignKey.Properties.Single().Name);
         Assert.Equal(DeleteBehavior.Cascade, foreignKey.DeleteBehavior);
 
@@ -81,37 +81,66 @@ public class RelationshipModelTests
     }
 
     [Fact]
-    public void Order_ReadsFromCustomerAndShippingAddress()
+    public void Order_BelongsToCustomerAndDeliveryMethodWithAnAddressSnapshot()
     {
         using var context = BuildStoreContext();
         var model = context.Model;
 
         var customer = model.FindEntityType(typeof(Customer))!;
-        var address = model.FindEntityType(typeof(StoreAddress))!;
+        var deliveryMethod = model.FindEntityType(typeof(DeliveryMethod))!;
         var order = model.FindEntityType(typeof(Order))!;
 
-        var toCustomer = Assert.Single(order.GetForeignKeys().Where(fk => fk.PrincipalEntityType == customer));
+        var toCustomer = Assert.Single(order.GetForeignKeys(), fk => fk.PrincipalEntityType == customer);
         Assert.Equal(DeleteBehavior.Restrict, toCustomer.DeleteBehavior);
 
-        var toAddress = Assert.Single(order.GetForeignKeys().Where(fk => fk.PrincipalEntityType == address));
-        Assert.Equal(nameof(Order.ShippingAddressId), toAddress.Properties.Single().Name);
-        Assert.Equal(DeleteBehavior.Restrict, toAddress.DeleteBehavior);
+        var toDeliveryMethod = Assert.Single(order.GetForeignKeys(), fk => fk.PrincipalEntityType == deliveryMethod);
+        Assert.Equal(nameof(Order.DeliveryMethodId), toDeliveryMethod.Properties.Single().Name);
+        Assert.Equal(DeleteBehavior.Restrict, toDeliveryMethod.DeleteBehavior);
 
+        var address = model.FindEntityType(typeof(StoreAddress))!;
+        Assert.DoesNotContain(order.GetForeignKeys(), fk => fk.PrincipalEntityType == address);
+
+        var shipTo = order.FindNavigation(nameof(Order.ShipToAddress));
+        Assert.NotNull(shipTo);
+        Assert.True(shipTo!.TargetEntityType.IsOwned());
+
+        Assert.NotNull(order.FindProperty(nameof(Order.ShippingAddressId)));
         Assert.Contains(order.GetNavigations(), n => n.Name == nameof(Order.Customer));
-        Assert.Contains(order.GetNavigations(), n => n.Name == nameof(Order.ShippingAddress));
         Assert.Contains(customer.GetNavigations(), n => n.Name == nameof(Customer.Orders));
     }
 
     [Fact]
-    public void StoreAddressesAreSoftDeletableThroughTheQueryFilter()
+    public void DeliveryMethod_IsMappedToItsOwnTable()
     {
         using var context = BuildStoreContext();
 
-        var address = context.Model.FindEntityType(typeof(StoreAddress))!;
-        var queryFilter = address.GetQueryFilter();
+        var deliveryMethod = context.Model.FindEntityType(typeof(DeliveryMethod))!;
 
-        Assert.NotNull(queryFilter);
-        Assert.Contains("IsDeleted", queryFilter!.ToString());
+        Assert.Equal("DeliveryMethods", deliveryMethod.GetTableName());
+        Assert.Equal(typeof(Guid), deliveryMethod.FindProperty(nameof(DeliveryMethod.Id))!.ClrType);
+        Assert.Contains(deliveryMethod.GetProperties(), p => p.Name == nameof(DeliveryMethod.EstimatedDeliveryTime));
+        Assert.Contains(
+            deliveryMethod.GetIndexes(),
+            index => index.IsUnique && index.Properties.Any(p => p.Name == nameof(DeliveryMethod.Name)));
+    }
+
+    [Fact]
+    public void SoftDeletedAddresses_AreFilteredOutOfQueries()
+    {
+        using var context = BuildStoreContext();
+
+        context.Addresses.Add(new StoreAddress
+        {
+            CustomerId = Guid.NewGuid(),
+            Label = "Home",
+            City = "Cairo",
+            Street = "Main St",
+            IsDeleted = true
+        });
+        context.SaveChanges();
+
+        Assert.Single(context.Addresses.IgnoreQueryFilters());
+        Assert.Empty(context.Addresses);
     }
 
     [Fact]
@@ -125,7 +154,7 @@ public class RelationshipModelTests
 
         Assert.Equal("Addresses", address.GetTableName());
 
-        var foreignKey = Assert.Single(address.GetForeignKeys().Where(fk => fk.PrincipalEntityType == user));
+        var foreignKey = Assert.Single(address.GetForeignKeys(), fk => fk.PrincipalEntityType == user);
         Assert.Equal(nameof(IdentityAddress.UserId), foreignKey.Properties.Single().Name);
         Assert.Equal(DeleteBehavior.Cascade, foreignKey.DeleteBehavior);
 

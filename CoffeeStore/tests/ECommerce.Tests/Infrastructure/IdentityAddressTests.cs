@@ -65,7 +65,7 @@ public class IdentityAddressTests
         var all = await ListAsync(stack);
 
         Assert.Equal("Second St", defaultAddress.Value!.Street);
-        Assert.Single(all.Where(a => a.IsDefault));
+        Assert.Single(all, a => a.IsDefault);
         Assert.Equal("Second St", all[0].Street);
     }
 
@@ -161,7 +161,7 @@ public class IdentityAddressTests
 
         Assert.Equal(second.Value.Id, defaultAddress.Value!.Id);
         Assert.DoesNotContain(all, a => a.Id == first.Value!.Id && a.IsDefault);
-        Assert.Single(all.Where(a => a.IsDefault));
+        Assert.Single(all, a => a.IsDefault);
     }
 
     [Fact]

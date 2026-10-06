@@ -1,4 +1,4 @@
-﻿namespace ECommerce.Application.Common;
+namespace ECommerce.Domain.Shared;
 
 public class Result
 {
@@ -20,6 +20,15 @@ public class Result
 
     public static Result Fail(Error error)
         => new(false, new[] { error });
+
+    public static Result Success()
+        => Ok();
+
+    public static Result Failure(Error error)
+        => Fail(error);
+
+    public static Result Failure(IReadOnlyList<Error> errors)
+        => Fail(errors);
 }
 
 public class Result<T> : Result
@@ -35,11 +44,12 @@ public class Result<T> : Result
         Value = value;
     }
 
-    // Object
     public static Result<T> Ok(T value)
         => new(value, true, Array.Empty<Error>());
 
-    // IReadOnlyList
+    public static Result<T> Success(T value)
+        => Ok(value);
+
     public static Result<IReadOnlyList<T>> Ok(IReadOnlyList<T> value)
         => new(value, true, Array.Empty<Error>());
 
@@ -48,4 +58,10 @@ public class Result<T> : Result
 
     public new static Result<T> Fail(Error error)
         => new(default, false, new[] { error });
+
+    public new static Result<T> Failure(Error error)
+        => Fail(error);
+
+    public new static Result<T> Failure(IReadOnlyList<Error> errors)
+        => Fail(errors);
 }
