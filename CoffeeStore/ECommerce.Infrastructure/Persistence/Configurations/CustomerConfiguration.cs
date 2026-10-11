@@ -33,11 +33,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.PhoneNumber)
             .HasMaxLength(20);
 
-        builder.HasMany(c => c.Addresses)
-            .WithOne(a => a.Customer)
-            .HasForeignKey(a => a.CustomerId)
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.HasMany(c => c.Orders)
             .WithOne(o => o.Customer)
             .HasForeignKey(o => o.CustomerId)

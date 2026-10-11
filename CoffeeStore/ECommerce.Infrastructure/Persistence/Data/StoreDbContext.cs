@@ -1,4 +1,3 @@
-using ECommerce.Domain.Entities.Addresses;
 using ECommerce.Domain.Entities.Carts;
 using ECommerce.Domain.Entities.Categories;
 using ECommerce.Domain.Entities.Customers;
@@ -21,7 +20,6 @@ namespace ECommerce.Infrastructure.Persistence.Data
         public DbSet<Product> Products => Set<Product>();
         public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
         public DbSet<Customer> Customers => Set<Customer>();
-        public DbSet<Address> Addresses => Set<Address>();
         public DbSet<Cart> Carts => Set<Cart>();
         public DbSet<CartItem> CartItems => Set<CartItem>();
         public DbSet<Order> Orders => Set<Order>();
