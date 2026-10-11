@@ -7,6 +7,7 @@ using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Contracts.Repositories;
 using ECommerce.Domain.Entities.Customers;
 using ECommerce.Domain.Entities.Orders;
+using ECommerce.Domain.Entities.Products;
 using OrderItem = ECommerce.Domain.Entities.Orders.OrderItem;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
@@ -41,32 +42,63 @@ public class OrderServices(IBasketRepository basketRepository, IUnitOfWork unitO
             return Result<OrderToReturn>.Fail(Error.NotFound("Order.CustomerNotFound", $"Customer with email {email} was not found"));
         }
 
+        var variantIds = basket.Items.Select(item => item.ProductId).Distinct().ToList();
+        var variants = await unitOfWork.GetRepository<ProductVariant>()
+            .GetAllAsync(new ProductVariantsByIdsSpecification(variantIds), ct);
+
+        var weights = variants.ToDictionary(v => v.Id, v => v.WeightInGrams);
+
         var orderItems = new List<OrderItem>();
         foreach (var item in basket.Items)
         {
+            if (!weights.TryGetValue(item.ProductId, out var weightInGrams))
+            {
+                return Result<OrderToReturn>.Fail(Error.NotFound(
+                    "Order.ProductVariantNotFound",
+                    $"Product variant with id {item.ProductId} was not found"));
+            }
+
+            var itemOrderedResult = ProductItemOrdered.Create(
+                item.ProductId,
+                item.ProductName,
+                weightInGrams,
+                item.UnitPrice);
+
+            if (itemOrderedResult.IsFailure)
+            {
+                return Result<OrderToReturn>.Fail(itemOrderedResult.Errors);
+            }
+
             var orderItemResult = OrderItem.Create(
                 Guid.NewGuid(),
-                new ProductItemOrdered(item.ProductId, item.ProductName, 0, item.UnitPrice),
+                itemOrderedResult.Value!,
                 item.Quantity);
 
-            if (orderItemResult.IsSuccess)
+            if (orderItemResult.IsFailure)
             {
-                orderItems.Add(orderItemResult.Value!);
+                return Result<OrderToReturn>.Fail(orderItemResult.Errors);
             }
+
+            orderItems.Add(orderItemResult.Value!);
+        }
+
+        var addressResult = OrderAddress.Create(
+            dto.ShipToAddress.FirstName,
+            dto.ShipToAddress.LastName,
+            dto.ShipToAddress.Street,
+            dto.ShipToAddress.City,
+            dto.ShipToAddress.Country);
+
+        if (addressResult.IsFailure)
+        {
+            return Result<OrderToReturn>.Fail(addressResult.Errors);
         }
 
         var orderResult = Order.Create(
             Guid.NewGuid(),
             customer.Id,
             email,
-            new OrderAddress
-            {
-                FirstName = dto.ShipToAddress.FirstName,
-                LastName = dto.ShipToAddress.LastName,
-                Street = dto.ShipToAddress.Street,
-                City = dto.ShipToAddress.City,
-                Country = dto.ShipToAddress.Country
-            },
+            addressResult.Value!,
             deliveryMethod,
             orderItems);
 

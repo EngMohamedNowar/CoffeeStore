@@ -155,14 +155,12 @@ public class Order : BaseEntity
             || string.IsNullOrWhiteSpace(address.Country);
 
     private static OrderAddress CopyAddress(OrderAddress address)
-        => new()
-        {
-            FirstName = address.FirstName.Trim(),
-            LastName = address.LastName.Trim(),
-            Street = address.Street.Trim(),
-            City = address.City.Trim(),
-            Country = address.Country.Trim()
-        };
+        => OrderAddress.Create(
+            address.FirstName,
+            address.LastName,
+            address.Street,
+            address.City,
+            address.Country).Value!;
 
     private static string GenerateOrderNumber()
         => $"ORD-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString("N")[..6].ToUpperInvariant()}";

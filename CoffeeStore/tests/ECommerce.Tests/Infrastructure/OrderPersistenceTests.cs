@@ -20,7 +20,7 @@ public class OrderPersistenceTests
     private static OrderItem Item(decimal unitPrice = 50m, int quantity = 2)
         => OrderItem.Create(
             Guid.NewGuid(),
-            new ProductItemOrdered(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, unitPrice),
+            ProductItemOrdered.Create(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, unitPrice).Value!,
             quantity).Value!;
 
     [Fact]
@@ -47,14 +47,12 @@ public class OrderPersistenceTests
             Guid.NewGuid(),
             customer.Id,
             customer.Email,
-            new OrderAddress
-            {
-                FirstName = "Ali",
-                LastName = "Hassan",
-                Street = "12 Main St",
-                City = "Cairo",
-                Country = "Egypt"
-            },
+            OrderAddress.Create(
+                "Ali",
+                "Hassan",
+                "12 Main St",
+                "Cairo",
+                "Egypt").Value!,
             deliveryMethod,
             new[] { Item() },
             shippingFee: 5m).Value!;
@@ -121,14 +119,12 @@ public class OrderPersistenceTests
             Guid.NewGuid(),
             customer.Id,
             customer.Email,
-            new OrderAddress
-            {
-                FirstName = "Sara",
-                LastName = "Adel",
-                Street = "5 Nile St",
-                City = "Giza",
-                Country = "Egypt"
-            },
+            OrderAddress.Create(
+                "Sara",
+                "Adel",
+                "5 Nile St",
+                "Giza",
+                "Egypt").Value!,
             deliveryMethod,
             new[] { Item() }).Value!;
 
