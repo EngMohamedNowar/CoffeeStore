@@ -97,4 +97,6 @@ public static class OrderErrors
 
     public static readonly Error InvalidWebhook =
         Error.Validation("Order.InvalidWebhook", "Stripe webhook signature is invalid.");
+    public static readonly Error InvalidWeight =
+    Error.Validation("Order.InvalidWeight", "Weight must be at least 1 gram.");
 }
