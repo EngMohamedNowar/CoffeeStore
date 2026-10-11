@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CoffeeStore — Entity Relationship Diagram</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #f6f8fb;
+    --panel: #ffffff;
+    --ink: #10161f;
+    --muted: #5a6675;
+    --line: #e3e9f0;
+    --accent: #6f4e37;
+    --store: #0b7285;
+    --identity: #5f3dc4;
+    --redis: #c92a2a;
+    --warn-bg: #fff4e6;
+    --warn-line: #ffd8a8;
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --ink: #e6edf3;
+    --muted: #9198a1;
+    --line: #2b3138;
+    --accent: #d0b8a8;
+    --store: #4dabf7;
+    --identity: #b197fc;
+    --redis: #ff8787;
+    --warn-bg: #2b2113;
+    --warn-line: #5c4420;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif;
+    line-height: 1.6;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 22px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  header h1 { font-size: 18px; margin: 0; letter-spacing: .2px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  header .spacer { flex: 1; }
+  button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 8px 14px; font-size: 13px; cursor: pointer; font-family: inherit;
+  }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  nav {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding: 8px 22px; display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px;
+  }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+  main { max-width: 1400px; margin: 0 auto; padding: 22px; }
+  section { margin-bottom: 34px; }
+  h2 {
+    font-size: 17px; margin: 0 0 4px; padding-left: 10px;
+    border-left: 4px solid var(--accent);
+  }
+  h2.store { border-color: var(--store); }
+  h2.identity { border-color: var(--identity); }
+  h2.redis { border-color: var(--redis); }
+  p.lead { color: var(--muted); font-size: 14px; margin: 4px 0 14px 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; overflow-x: auto;
+  }
+  .diagram { display: flex; justify-content: center; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+  table {
+    width: 100%; border-collapse: collapse; font-size: 13.5px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: color-mix(in srgb, var(--accent) 12%, var(--panel)); font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  code {
+    background: color-mix(in srgb, var(--ink) 8%, transparent);
+    padding: 1px 6px; border-radius: 5px; font-size: 12.5px;
+  }
+  .badge {
+    display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11.5px;
+    border: 1px solid var(--line); color: var(--muted);
+  }
+  .badge.cascade { color: #2b8a3e; border-color: #b2f2bb; background: #ebfbee; }
+  .badge.restrict { color: #e67700; border-color: #ffd8a8; background: #fff4e6; }
+  .badge.logic { color: #364fc7; border-color: #bac8ff; background: #edf2ff; }
+  [data-theme="dark"] .badge.cascade { color: #8ce99a; border-color: #2b4c33; background: #132a1a; }
+  [data-theme="dark"] .badge.restrict { color: #ffd43b; border-color: #4d3d1a; background: #2a2110; }
+  [data-theme="dark"] .badge.logic { color: #91afff; border-color: #2b3a6b; background: #141c33; }
+  .warn {
+    background: var(--warn-bg); border: 1px solid var(--warn-line);
+    border-radius: 12px; padding: 12px 16px; font-size: 13.5px;
+  }
+  .legend-box { border-radius: 14px; border: 1px solid var(--line); background: var(--panel); padding: 4px 0; }
+  footer {
+    color: var(--muted); font-size: 12.5px; text-align: center;
+    padding: 20px 0 40px; border-top: 1px solid var(--line); margin-top: 30px;
+  }
+  @media print {
+    header, nav, button { display: none !important; }
+    body { background: #fff; }
+    .card, table { break-inside: avoid; }
+    section { break-inside: avoid-page; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CoffeeStore — ERD</h1>
+  <span class="sub">Entity Relationship Diagram · <code>ECommerce.Domain</code></span>
+  <span class="spacer"></span>
+  <button class="ghost" onclick="toggleTheme()">Dark / Light</button>
+  <button onclick="window.print()">طباعة / PDF</button>
+</header>
+
+<nav>
+  <a href="#overview">1) نظرة عامة</a>
+  <a href="#store">2) قاعدة المتجر</a>
+  <a href="#identity">3) قاعدة الهوية</a>
+  <a href="#redis">4) Redis</a>
+  <a href="#legend">5) ليجند العلاقات</a>
+</nav>
+
+<main>
+
+<section id="overview">
+  <h2>1) نظرة عامة — تلات قواعد مخزّن مختلفة</h2>
+  <p class="lead">
+    المشروع متقسّم: الكتالوج والأوردرات في <code>CoffeeStoreDb</code>، وهوية المستخدمين وعناوينهم في
+    <code>CoffeeStoreDb.Identity</code>، والسلة المؤقتة في Redis. الرابطة بين القاعدتين
+    <strong>منطقية فقط</strong> (مفيش FK عشان القاعدتين مختلفتين).
+  </p>
+  <div class="card diagram">
+    <pre class="mermaid-source" data-id="overview">
+flowchart LR
+    subgraph IDENTITY["CoffeeStoreDb.Identity"]
+        USER[("Users")]
+        ROLE[("Roles")]
+        USERROLE[("UserRoles")]
+        UADDR[("Addresses&lt;br/&gt;← UserAddress")]
+        USER ||--o{ USERROLE
+        ROLE ||--o{ USERROLE
+        USER ||--o{ UADDR
+    end
+
+    subgraph STORE["CoffeeStoreDb"]
+        CUST[("Customers")]
+        CAT[("Categories")]
+        PROD[("Products")]
+        VAR[("ProductVariants")]
+        CART[("Carts")]
+        CARTITEM[("CartItems")]
+        ORD[("Orders&lt;br/&gt;+ ShipToAddress snapshot")]
+        OITEM[("OrderItems&lt;br/&gt;+ item snapshot")]
+        DM[("DeliveryMethods")]
+        PAY[("Payments")]
+        CAT ||--o{ PROD
+        PROD ||--|{ VAR
+        CUST ||--|| CART
+        CART ||--|{ CARTITEM
+        VAR ||--o{ CARTITEM
+        CUST ||--|{ ORD
+        DM ||--o{ ORD
+        ORD ||--|{ OITEM
+        VAR ||--o{ OITEM
+        ORD ||--o| PAY
+    end
+
+    subgraph REDIS["Redis"]
+        BASKET[["BasketCustomer&lt;br/&gt;BasketItem list"]]
+    end
+
+    USER -. "IdentityUserId (unique, no FK)" .-> CUST
+    USER -. "Order.UserEmail (no FK)" .-> ORD
+    BASKET -. "ProductId (no FK)" .-> VAR
+    </pre>
+    <div class="diagram" id="out-overview"></div>
+  </div>
+</section>
+
+<section id="store">
+  <h2 class="store">2) CoffeeStoreDb — الكتالوج · السلة · الأوردرات · الدفع</h2>
+  <p class="lead">
+    10 جداول. الـ <strong>Snapshot pattern</strong> مستخدم مرتين:
+    <code>Orders.ShipToAddress_*</code> و <code>OrderItems.*Snapshot</code> عشان تفاصيل الأوردر القديم ما تتغيرش لو المنتج أو العنوان اتغيّروا.
+  </p>
+  <div class="card diagram">
+    <pre class="mermaid-source" data-id="store">
+erDiagram
+    CATEGORY ||--o{ PRODUCT : "contains"
+    CATEGORY |o--o{ CATEGORY : "parent / sub-category"
+    PRODUCT ||--|{ PRODUCT_VARIANT : "variants"
+    CUSTOMER ||--|| CART : "one active cart"
+    CART ||--|{ CART_ITEM : "line items"
+    PRODUCT_VARIANT ||--o{ CART_ITEM : "priced from"
+    CUSTOMER ||--|{ ORDER : "places"
+    DELIVERY_METHOD ||--o{ ORDER : "shipping via"
+    ORDER ||--|{ ORDER_ITEM : "line items"
+    ORDER ||--o| PAYMENT : "paid by"
+    PRODUCT_VARIANT ||--o{ ORDER_ITEM : "snapshot source"
+
+    CATEGORY {
+        guid Id PK
+        string Name
+        string Slug UK
+        string Description
+        string ImageUrl
+        guid ParentCategoryId FK "self-ref, nullable"
+        datetime CreatedAt
+        bool IsDeleted
+    }
+    PRODUCT {
+        guid Id PK
+        string Name
+        string Slug UK
+        string Description
+        string Origin
+        string RoastLevel
+        string ImageUrl
+        bool IsActive
+        bool IsFeatured
+        guid CategoryId FK
+        bool IsDeleted
+    }
+    PRODUCT_VARIANT {
+        guid Id PK
+        guid ProductId FK
+        int WeightInGrams
+        string GrindType
+        decimal Price
+        int StockQuantity
+        string Sku UK
+        bool IsDeleted
+    }
+    CUSTOMER {
+        guid Id PK
+        string IdentityUserId UK "logical link to Users.Id"
+        string FullName
+        string Email UK
+        string PhoneNumber
+        bool IsDeleted
+    }
+    CART {
+        guid Id PK
+        guid CustomerId FK_UK "unique = one cart per customer"
+        bool IsDeleted
+    }
+    CART_ITEM {
+        guid Id PK
+        guid CartId FK
+        guid ProductVariantId FK
+        int Quantity
+        decimal UnitPrice
+        bool IsDeleted
+    }
+    ORDER {
+        guid Id PK
+        string OrderNumber UK
+        guid CustomerId FK
+        guid DeliveryMethodId FK
+        string UserEmail
+        string Status
+        decimal SubTotal
+        decimal ShippingFee
+        decimal DeliveryMethodPrice
+        string ShipToAddress_FirstName "frozen snapshot"
+        string ShipToAddress_LastName "frozen snapshot"
+        string ShipToAddress_Street "frozen snapshot"
+        string ShipToAddress_City "frozen snapshot"
+        string ShipToAddress_Country "frozen snapshot"
+        guid ShippingAddressId "orphan column - unused"
+        bool IsDeleted
+    }
+    ORDER_ITEM {
+        guid Id PK
+        guid OrderId FK
+        guid ProductVariantId FK
+        string ProductNameSnapshot
+        int WeightInGramsSnapshot
+        decimal UnitPriceSnapshot
+        int Quantity
+    }
+    PAYMENT {
+        guid Id PK
+        guid OrderId FK_UK "unique = one payment per order"
+        string Method
+        string Status
+        decimal Amount
+        string TransactionReference
+        datetime PaidAt
+        bool IsDeleted
+    }
+    DELIVERY_METHOD {
+        guid Id PK
+        string Name UK
+        string Description
+        decimal Price
+        string EstimatedDeliveryTime
+        bool IsAvailable
+        int DisplayOrder
+        bool IsDeleted
+    }
+    </pre>
+    <div class="diagram" id="out-store"></div>
+  </div>
+</section>
+
+<section id="identity">
+  <h2 class="identity">3) CoffeeStoreDb.Identity — المستخدمين · الأدوار · عناوين المستخدم</h2>
+  <p class="lead">
+    كيان <code>UserAddress</code> (الجدول <code>Addresses</code>) هو بيزنس «اليوزر ليه أكتر من عنوان» —
+    وفيه <code>IsDefault</code> اللي بيمثّل عنوان التوصيل المفضّل.
+    جداول <code>AspNetUserClaims / Logins / Tokens / RoleClaims</code> متـ <code>Ignore</code> وموجودة في القاعدة.
+  </p>
+  <div class="card diagram">
+    <pre class="mermaid-source" data-id="identity">
+erDiagram
+    USER ||--|{ USER_ADDRESS : "address book"
+    USER }o--|| ROLE : "assigned via UserRoles"
+
+    USER {
+        string Id PK "AspNetUsers.Id (nvarchar 450)"
+        string UserName UK
+        string Email UK
+        bool EmailConfirmed
+        string PasswordHash
+        string DisplayName
+        bool LockoutEnabled
+    }
+    ROLE {
+        string Id PK
+        string Name UK "Admin / SuperAdmin / User"
+        string NormalizedName
+    }
+    USER_ROLE {
+        string UserId PK_FK
+        string RoleId PK_FK
+    }
+    USER_ADDRESS {
+        guid Id PK
+        string UserId FK "indexed"
+        string Label
+        string FirstName
+        string LastName
+        string Country
+        string City
+        string Street
+        string Building
+        string Notes
+        bool IsDefault
+    }
+    </pre>
+    <div class="diagram" id="out-identity"></div>
+  </div>
+  <div class="warn" style="margin-top:14px;">
+    <strong>ملاحظة:</strong> جدول <code>Addresses</code> ده تابع لقاعدة الهوية، و<strong>مش</strong> هو جدول <code>Customers.Addresses</code> القديم —
+    ده كان في قاعدة المتجر واتشال من الكود. عنوان التوصيل النهائي بينحفظ كـ snapshot مجمّد داخل <code>Orders.ShipToAddress_*</code>.
+  </div>
+</section>
+
+<section id="redis">
+  <h2 class="redis">4) Redis — السلة المؤقتة</h2>
+  <p class="lead">مش جداول — دي documents بـ JSON، والـ key هو <code>basketId</code>.</p>
+  <div class="card diagram">
+    <pre class="mermaid-source" data-id="redis">
+erDiagram
+    BASKET_CUSTOMER ||--|{ BASKET_ITEM : "contains"
+
+    BASKET_CUSTOMER {
+        guid Id PK "redis key"
+    }
+    BASKET_ITEM {
+        guid ProductId "reference only - no FK"
+        string ProductName
+        string PictureUrl
+        decimal UnitPrice
+        int Quantity
+    }
+    </pre>
+    <div class="diagram" id="out-redis"></div>
+  </div>
+</section>
+
+<section id="legend">
+  <h2>5) ليجند العلاقات — ليه كل FK عامل كده؟</h2>
+  <div class="grid">
+    <table>
+      <tr><th>Relationship</th><th>FK</th><th>On Delete</th><th>السبب</th></tr>
+      <tr>
+        <td><code>Category → Category</code></td><td><code>ParentCategoryId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>شجرة تصنيفات — مينفعش تحذف أب وهو عنده أبناء</td>
+      </tr>
+      <tr>
+        <td><code>Category → Product</code></td><td><code>Products.CategoryId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>متحذفش تصنيف جواه منتجات</td>
+      </tr>
+      <tr>
+        <td><code>Product → ProductVariant</code></td><td><code>ProductVariants.ProductId</code></td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>حذف المنتج يمسح أوزانه وطحناته معاه</td>
+      </tr>
+      <tr>
+        <td><code>Customer → Cart</code></td><td><code>Carts.CustomerId</code> (unique)</td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>سلة واحدة نشطة لكل عميل</td>
+      </tr>
+      <tr>
+        <td><code>Cart → CartItem</code></td><td><code>CartItems.CartId</code></td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>حذف السلة يمسح محتوياتها</td>
+      </tr>
+      <tr>
+        <td><code>ProductVariant → CartItem</code></td><td><code>CartItems.ProductVariantId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>متحذش variant وهو في سلة حد</td>
+      </tr>
+      <tr>
+        <td><code>Customer → Order</code></td><td><code>Orders.CustomerId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>حماية سجل الطلبات لو بيانات العميل اتمسحت</td>
+      </tr>
+      <tr>
+        <td><code>DeliveryMethod → Order</code></td><td><code>Orders.DeliveryMethodId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>متحذفش طريقة توصيل متسجّل بيها أوردرات</td>
+      </tr>
+      <tr>
+        <td><code>Order → OrderItem</code></td><td><code>OrderItems.OrderId</code></td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>حذف الأوردر يمسح بنوده</td>
+      </tr>
+      <tr>
+        <td><code>ProductVariant → OrderItem</code></td><td><code>OrderItems.ProductVariantId</code></td>
+        <td><span class="badge restrict">Restrict</span></td>
+        <td>مرجع تاريخي + الاسم والسعر محفوظين كـ snapshot</td>
+      </tr>
+      <tr>
+        <td><code>Order → Payment</code></td><td><code>Payments.OrderId</code> (unique)</td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>دفع واحد لكل أوردر (1:1)</td>
+      </tr>
+      <tr>
+        <td><code>User → UserAddress</code></td><td><code>Addresses.UserId</code></td>
+        <td><span class="badge cascade">Cascade</span></td>
+        <td>عنوان المستخدم يروح معاه</td>
+      </tr>
+    </table>
+
+    <table>
+      <tr><th>علاقة منطقية (بدون FK)</th><th>السبب</th></tr>
+      <tr>
+        <td><code>Customer.IdentityUserId → Users.Id</code></td>
+        <td><span class="badge logic">cross-DB</span> القاعدتين مختلفتين فمفيش FK — الربط بـ unique index</td>
+      </tr>
+      <tr>
+        <td><code>Order.UserEmail → Users.Email</code></td>
+        <td><span class="badge logic">soft link</span> نص حر للتفريق بين المستخدمين</td>
+      </tr>
+      <tr>
+        <td><code>BasketItem.ProductId → ProductVariant</code></td>
+        <td><span class="badge logic">Redis</span> السلة في Redis ومبيتحمّلش من القاعدة</td>
+      </tr>
+
+      <tr><th colspan="2">ملاحظات على التصميم</th></tr>
+      <tr>
+        <td>Soft delete</td>
+        <td><code>IsDeleted</code> + query filter على أغلب الجداول (ماعدا <code>OrderItems</code>)</td>
+      </tr>
+      <tr>
+        <td>Owned types</td>
+        <td><code>ShipToAddress</code> و <code>ItemOrdered</code> أعمدتهم على نفس الجدول — قيمة مجمّدة مش جدول مستقل</td>
+      </tr>
+      <tr>
+        <td>عمود ميّت</td>
+        <td><code>Orders.ShippingAddressId</code> مفيش عليه FK ولا index ولا استخدام</td>
+      </tr>
+      <tr>
+        <td>Identity extras</td>
+        <td><code>UserClaims / UserLogins / UserTokens / RoleClaims</code> متـ <code>Ignore</code> — مش موجودة</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  CoffeeStore · ERD مولّد يدوياً من <code>ECommerce.Domain</code> + EF Core configurations · Mermaid v11
+</footer>
+
+<script>
+  const THEME_KEY = "erd-theme";
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", current);
+    localStorage.setItem(THEME_KEY, current);
+    renderAll();
+  }
+
+  async function renderAll() {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "loose",
+      theme: dark ? "dark" : "default",
+      er: { fontSize: 13 }
+    });
+
+    for (const el of document.querySelectorAll(".mermaid-source")) {
+      const id = el.dataset.id;
+      const source = el.textContent.trim();
+      const target = document.getElementById("out-" + id);
+      try {
+        const { svg } = await mermaid.render("diagram-" + id + "-" + (dark ? "d" : "l"), source);
+        target.innerHTML = svg;
+      } catch (err) {
+        target.innerHTML = "<pre style='color:red'>Diagram error (" + id + "): " + err + "</pre>";
+        console.error(id, err);
+      }
+    }
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>

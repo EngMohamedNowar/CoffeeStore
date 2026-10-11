@@ -194,7 +194,7 @@ public sealed class IdentityService(
         if (makeDefault)
             await ClearDefaultAsync(user.Id, cancellationToken);
 
-        var address = new Address
+        var address = new UserAddress
         {
             Label = addressDto.Label.Trim(),
             FirstName = addressDto.FirstName.Trim(),
@@ -279,7 +279,7 @@ public sealed class IdentityService(
     private static string Describe(IdentityResult result)
         => string.Join(" ", result.Errors.Select(e => e.Description));
 
-    private IQueryable<Address> OrderedAddresses(string userId)
+    private IQueryable<UserAddress> OrderedAddresses(string userId)
         => context.Addresses
             .Where(a => a.UserId == userId)
             .OrderByDescending(a => a.IsDefault)
@@ -302,7 +302,7 @@ public sealed class IdentityService(
             ? AddressErrors.AddressInvalid
             : null;
 
-    private static AddressDto ToDto(Address address) => new()
+    private static AddressDto ToDto(UserAddress address) => new()
     {
         Id = address.Id,
         Label = address.Label,

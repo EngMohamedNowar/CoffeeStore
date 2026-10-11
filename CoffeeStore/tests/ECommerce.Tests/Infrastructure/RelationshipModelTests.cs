@@ -5,8 +5,7 @@ using ECommerce.Infrastructure.Persistence.Data;
 using ECommerce.Infrastructure.Persistence.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using StoreAddress = ECommerce.Domain.Entities.Addresses.Address;
-using IdentityAddress = ECommerce.Domain.Entities.Identity.Address;
+using IdentityAddress = ECommerce.Domain.Entities.Identity.UserAddress;
 using ApplicationUser = ECommerce.Domain.Entities.Identity.ApplicationUser;
 
 namespace ECommerce.Tests.Infrastructure;
@@ -37,30 +36,8 @@ public class RelationshipModelTests
         using var context = BuildStoreContext();
 
         Assert.NotNull(context.Model.FindEntityType(typeof(Customer)));
-        Assert.NotNull(context.Model.FindEntityType(typeof(StoreAddress)));
         Assert.NotNull(context.Model.FindEntityType(typeof(Cart)));
         Assert.NotNull(context.Model.FindEntityType(typeof(Order)));
-    }
-
-    [Fact]
-    public void Address_IsOwnedByACustomerThroughACascadingKey()
-    {
-        using var context = BuildStoreContext();
-        var model = context.Model;
-
-        var customer = model.FindEntityType(typeof(Customer))!;
-        var address = model.FindEntityType(typeof(StoreAddress))!;
-
-        // Regression: CustomerId was once removed from the entity while
-        // CustomerConfiguration still mapped it, which broke model building.
-        Assert.Contains(address.GetProperties(), p => p.Name == nameof(StoreAddress.CustomerId));
-
-        var foreignKey = Assert.Single(address.GetForeignKeys(), fk => fk.PrincipalEntityType == customer);
-        Assert.Equal(nameof(StoreAddress.CustomerId), foreignKey.Properties.Single().Name);
-        Assert.Equal(DeleteBehavior.Cascade, foreignKey.DeleteBehavior);
-
-        Assert.Contains(address.GetNavigations(), n => n.Name == nameof(StoreAddress.Customer));
-        Assert.Contains(customer.GetNavigations(), n => n.Name == nameof(Customer.Addresses));
     }
 
     [Fact]
@@ -97,9 +74,6 @@ public class RelationshipModelTests
         Assert.Equal(nameof(Order.DeliveryMethodId), toDeliveryMethod.Properties.Single().Name);
         Assert.Equal(DeleteBehavior.Restrict, toDeliveryMethod.DeleteBehavior);
 
-        var address = model.FindEntityType(typeof(StoreAddress))!;
-        Assert.DoesNotContain(order.GetForeignKeys(), fk => fk.PrincipalEntityType == address);
-
         var shipTo = order.FindNavigation(nameof(Order.ShipToAddress));
         Assert.NotNull(shipTo);
         Assert.True(shipTo!.TargetEntityType.IsOwned());
@@ -122,25 +96,6 @@ public class RelationshipModelTests
         Assert.Contains(
             deliveryMethod.GetIndexes(),
             index => index.IsUnique && index.Properties.Any(p => p.Name == nameof(DeliveryMethod.Name)));
-    }
-
-    [Fact]
-    public void SoftDeletedAddresses_AreFilteredOutOfQueries()
-    {
-        using var context = BuildStoreContext();
-
-        context.Addresses.Add(new StoreAddress
-        {
-            CustomerId = Guid.NewGuid(),
-            Label = "Home",
-            City = "Cairo",
-            Street = "Main St",
-            IsDeleted = true
-        });
-        context.SaveChanges();
-
-        Assert.Single(context.Addresses.IgnoreQueryFilters());
-        Assert.Empty(context.Addresses);
     }
 
     [Fact]

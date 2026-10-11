@@ -8,7 +8,7 @@ namespace ECommerce.Infrastructure.Persistence.Identity.Data
     public class StoreIdentityDbContext(DbContextOptions<StoreIdentityDbContext> options)
         : IdentityDbContext<ApplicationUser>(options)
     {
-        public DbSet<Address> Addresses => Set<Address>();
+        public DbSet<UserAddress> Addresses => Set<UserAddress>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -22,7 +22,7 @@ namespace ECommerce.Infrastructure.Persistence.Identity.Data
             builder.Entity<IdentityRole>().ToTable("Roles");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
 
-            builder.Entity<Address>(address =>
+            builder.Entity<UserAddress>(address =>
             {
                 address.ToTable("Addresses");
 
