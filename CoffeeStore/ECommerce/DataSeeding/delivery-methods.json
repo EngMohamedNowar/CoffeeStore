@@ -1,0 +1,38 @@
+[
+  {
+    "id": "d3110000-0000-0000-0000-000000000001",
+    "name": "Standard Delivery",
+    "description": "Door-to-door delivery for orders inside the city.",
+    "price": 30,
+    "estimatedDeliveryTime": "2-4 business days",
+    "isAvailable": true,
+    "displayOrder": 1
+  },
+  {
+    "id": "d3110000-0000-0000-0000-000000000002",
+    "name": "Express Delivery",
+    "description": "Priority handling for next-day delivery.",
+    "price": 60,
+    "estimatedDeliveryTime": "Next day",
+    "isAvailable": true,
+    "displayOrder": 2
+  },
+  {
+    "id": "d3110000-0000-0000-0000-000000000003",
+    "name": "Same Day Delivery",
+    "description": "Order before 2 PM and get it the same day.",
+    "price": 90,
+    "estimatedDeliveryTime": "Same day",
+    "isAvailable": true,
+    "displayOrder": 3
+  },
+  {
+    "id": "d3110000-0000-0000-0000-000000000004",
+    "name": "Store Pickup",
+    "description": "Collect your order from the store counter.",
+    "price": 0,
+    "estimatedDeliveryTime": "Ready in 2 hours",
+    "isAvailable": true,
+    "displayOrder": 4
+  }
+]

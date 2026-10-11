@@ -59,12 +59,26 @@ public static class OrderErrors
     public static readonly Error ShippingAddressRequired =
         Error.Validation("Order.ShippingAddressRequired", "Shipping address is required.");
 
-
     public static readonly Error ShippingAddressNotFound =
         Error.NotFound("Order.ShippingAddressNotFound", "Shipping address was not found.");
 
     public static readonly Error ShippingAddressNotOwned =
         Error.Forbidden("Order.ShippingAddressNotOwned", "Shipping address does not belong to the current user.");
+
+    public static readonly Error InvalidFirstName =
+        Error.Validation("Order.InvalidFirstName", "First name is required.");
+
+    public static readonly Error InvalidLastName =
+        Error.Validation("Order.InvalidLastName", "Last name is required.");
+
+    public static readonly Error InvalidStreet =
+        Error.Validation("Order.InvalidStreet", "Street is required.");
+
+    public static readonly Error InvalidCity =
+        Error.Validation("Order.InvalidCity", "City is required.");
+
+    public static readonly Error InvalidCountry =
+        Error.Validation("Order.InvalidCountry", "Country is required.");
 
     public static readonly Error CannotPayCancelled =
         Error.Conflict("Order.CannotPayCancelled", "Cancelled orders cannot be paid.");
