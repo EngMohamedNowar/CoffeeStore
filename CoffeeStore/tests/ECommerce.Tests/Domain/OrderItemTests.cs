@@ -8,7 +8,7 @@ public class OrderItemTests
     private static ProductItemOrdered Item(
         decimal unitPrice = 50m,
         int weightInGrams = 250)
-        => new(Guid.NewGuid(), "Ethiopian Yirgacheffe", weightInGrams, unitPrice);
+        => ProductItemOrdered.Create(Guid.NewGuid(), "Ethiopian Yirgacheffe", weightInGrams, unitPrice).Value!;
 
     [Fact]
     public void Create_BuildsAnItemWithTheLineTotal()
@@ -67,9 +67,9 @@ public class OrderItemTests
     [Fact]
     public void ProductItemOrdered_IsAValueObject()
     {
-        var left = new ProductItemOrdered(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, 50m);
-        var right = new ProductItemOrdered(left.ProductVariantId, "Ethiopian Yirgacheffe", 250, 50m);
-        var different = new ProductItemOrdered(left.ProductVariantId, "Ethiopian Yirgacheffe", 250, 51m);
+        var left = ProductItemOrdered.Create(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, 50m).Value!;
+        var right = ProductItemOrdered.Create(left.ProductVariantId, "Ethiopian Yirgacheffe", 250, 50m).Value!;
+        var different = ProductItemOrdered.Create(left.ProductVariantId, "Ethiopian Yirgacheffe", 250, 51m).Value!;
 
         Assert.Equal(left, right);
         Assert.NotEqual(left, different);

@@ -14,19 +14,17 @@ public class OrderTests
             isAvailable: available).Value!;
 
     private static OrderAddress Address(string city = "Cairo")
-        => new()
-        {
-            FirstName = " Ali ",
-            LastName = "Hassan",
-            Street = "12 Main St",
-            City = city,
-            Country = "Egypt"
-        };
+        => OrderAddress.Create(
+            " Ali ",
+            "Hassan",
+            "12 Main St",
+            city,
+            "Egypt").Value!;
 
     private static OrderItem Item(decimal unitPrice = 50m, int quantity = 1)
         => OrderItem.Create(
             Guid.NewGuid(),
-            new ProductItemOrdered(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, unitPrice),
+            ProductItemOrdered.Create(Guid.NewGuid(), "Ethiopian Yirgacheffe", 250, unitPrice).Value!,
             quantity).Value!;
 
     private static Result<Order> Create(
@@ -86,8 +84,8 @@ public class OrderTests
         var address = Address();
 
         var order = Create(address: address).Value!;
-        address.City = "Giza";
 
+        Assert.NotSame(address, order.ShipToAddress);
         Assert.Equal("Ali", order.ShipToAddress.FirstName);
         Assert.Equal("Cairo", order.ShipToAddress.City);
         Assert.Equal("Egypt", order.ShipToAddress.Country);
@@ -155,10 +153,10 @@ public class OrderTests
     [Fact]
     public void Create_RejectsAnIncompleteAddress()
     {
-        var result = Create(address: Address(city: "  "));
+        var result = OrderAddress.Create("Ali", "Hassan", "12 Main St", "  ", "Egypt");
 
         Assert.True(result.IsFailure);
-        Assert.Equal("Order.ShippingAddressRequired", Assert.Single(result.Errors).code);
+        Assert.Equal("Order.InvalidCity", Assert.Single(result.Errors).code);
     }
 
     [Fact]
