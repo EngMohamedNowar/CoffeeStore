@@ -1,6 +1,6 @@
 namespace ECommerce.Domain.Entities.Identity;
 
-public class Address
+public class UserAddress
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 

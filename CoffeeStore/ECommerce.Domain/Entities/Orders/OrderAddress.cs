@@ -1,3 +1,4 @@
+using ECommerce.Domain.Entities.Identity;
 using ECommerce.Domain.Errors;
 using ECommerce.Domain.Shared;
 
@@ -46,4 +47,11 @@ public sealed class OrderAddress
             Country = country.Trim()
         });
     }
+    public static Result<OrderAddress> FromUserAddress(UserAddress userAddress)
+        => Create(
+            userAddress.FirstName,
+            userAddress.LastName,
+            userAddress.Street,
+            userAddress.City,
+            userAddress.Country);
 }

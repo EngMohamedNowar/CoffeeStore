@@ -5,6 +5,6 @@ namespace ECommerce.Domain.Entities.Identity
     {
         public string DisplayName { get; set; } = string.Empty;
 
-        public ICollection<Address> Addresses { get; set; } = new List<Address>();
+        public ICollection<UserAddress> Addresses { get; set; } = new List<UserAddress>();
     }
 }
