@@ -20,7 +20,10 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ECommerce.Api.Filters.ValidationFilter>();
+});
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -40,6 +43,7 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseMiddleware<ECommerce.Api.Middleware.RequestLoggingMiddleware>();
 
 await app.SeedAndMigrationAsync();
 

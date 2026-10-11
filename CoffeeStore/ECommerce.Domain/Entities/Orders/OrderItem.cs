@@ -16,7 +16,7 @@ public sealed class OrderItem
 
     public decimal LineTotal => ItemOrdered.UnitPrice * Quantity;
 
-    internal static Result<OrderItem> Create(
+    public static Result<OrderItem> Create(
         Guid id,
         ProductItemOrdered itemOrdered,
         int quantity)
@@ -38,5 +38,5 @@ public sealed class OrderItem
         });
     }
 
-    internal void AssignOrder(Guid orderId) => OrderId = orderId;
+    public void AssignOrder(Guid orderId) => OrderId = orderId;
 }

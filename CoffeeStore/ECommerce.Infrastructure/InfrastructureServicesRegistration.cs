@@ -6,6 +6,7 @@ using ECommerce.Domain.Contracts.Repositories;
 using ECommerce.Domain.Entities.Identity;
 using ECommerce.Infrastructure.Identity.Services;
 using ECommerce.Infrastructure.Persistence.Data;
+using ECommerce.Infrastructure.Persistence.Interceptors;
 using ECommerce.Infrastructure.Persistence.DataSeeding;
 using ECommerce.Infrastructure.Persistence.Identity.Data;
 using ECommerce.Infrastructure.Persistence.Repositories;
@@ -25,7 +26,8 @@ public static class InfrastructureServicesRegistration
     {
         services.AddDbContext<StoreDbContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
+                   .AddInterceptors(new AuditInterceptor());
         });
 
         services.AddDbContext<StoreIdentityDbContext>(options =>
@@ -35,6 +37,7 @@ public static class InfrastructureServicesRegistration
 
         services.AddKeyedScoped<IDataSeeder, CatalogDataSeeder>("Catalog");
         services.AddKeyedScoped<IDataSeeder, IdentityDataSeeder>("Identity");
+        services.AddKeyedScoped<IDataSeeder, DeliveryMethodDataSeeder>("Delivery");
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
