@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ECommerce.Application.Common.Messaging;
 using ECommerce.Application.MappingProfiles.Products;
 using ECommerce.Application.Services.Classes.Authentications;using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
@@ -28,6 +29,7 @@ public static class ApplicationServicesRegistration
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IOrderServices, OrderServices>();
         services.AddScoped<ICacheServices, CacheServices>();
+        services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IAuthenticationService, AuthenticationsServices>();
         services.AddScoped<ITokenServices, TokenServices>();
 
