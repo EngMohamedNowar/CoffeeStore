@@ -1,5 +1,6 @@
 using AutoMapper;
 using ECommerce.Application.DTOs.Orders;
+using ECommerce.Application.DeliveryMethods.Specification;
 using ECommerce.Application.Orders.Dtos;
 using ECommerce.Application.Services.Contracts;
 using ECommerce.Application.Specifications;
@@ -42,27 +43,32 @@ public class OrderServices(IBasketRepository basketRepository, IUnitOfWork unitO
             return Result<OrderToReturn>.Fail(Error.NotFound("Order.CustomerNotFound", $"Customer with email {email} was not found"));
         }
 
-        var variantIds = basket.Items.Select(item => item.ProductId).Distinct().ToList();
+        var variantIds = basket.Items.Select(item => item.ProductVariantId).Distinct().ToList();
         var variants = await unitOfWork.GetRepository<ProductVariant>()
             .GetAllAsync(new ProductVariantsByIdsSpecification(variantIds), ct);
 
-        var weights = variants.ToDictionary(v => v.Id, v => v.WeightInGrams);
+        var variantsById = variants.ToDictionary(v => v.Id);
 
         var orderItems = new List<OrderItem>();
         foreach (var item in basket.Items)
         {
-            if (!weights.TryGetValue(item.ProductId, out var weightInGrams))
+            if (!variantsById.TryGetValue(item.ProductVariantId, out var variant))
             {
                 return Result<OrderToReturn>.Fail(Error.NotFound(
                     "Order.ProductVariantNotFound",
-                    $"Product variant with id {item.ProductId} was not found"));
+                    $"Product variant with id {item.ProductVariantId} was not found"));
+            }
+
+            if (item.Quantity > variant.StockQuantity)
+            {
+                return Result<OrderToReturn>.Fail(OrderErrors.InsufficientStock);
             }
 
             var itemOrderedResult = ProductItemOrdered.Create(
-                item.ProductId,
-                item.ProductName,
-                weightInGrams,
-                item.UnitPrice);
+                variant.Id,
+                variant.Product.Name,
+                variant.WeightInGrams,
+                variant.Price);
 
             if (itemOrderedResult.IsFailure)
             {

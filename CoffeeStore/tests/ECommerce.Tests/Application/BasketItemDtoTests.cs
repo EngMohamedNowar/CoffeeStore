@@ -17,7 +17,7 @@ public class BasketItemDtoTests
     public void PictureUrl_IsOptional()
     {
         var item = new BasketItemDto(
-            productId: Guid.NewGuid(),
+            productVariantId: Guid.NewGuid(),
             productName: "Ethiopian Yirgacheffe",
             pictureUrl: null,
             unitPrice: 12.50m,
@@ -33,7 +33,7 @@ public class BasketItemDtoTests
     public void ProductName_IsStillRequired()
     {
         var item = new BasketItemDto(
-            productId: Guid.NewGuid(),
+            productVariantId: Guid.NewGuid(),
             productName: string.Empty,
             pictureUrl: null,
             unitPrice: 12.50m,
@@ -48,7 +48,7 @@ public class BasketItemDtoTests
     public void Quantity_MustBeAtLeastOne()
     {
         var item = new BasketItemDto(
-            productId: Guid.NewGuid(),
+            productVariantId: Guid.NewGuid(),
             productName: "Ethiopian Yirgacheffe",
             pictureUrl: null,
             unitPrice: 12.50m,
@@ -63,7 +63,7 @@ public class BasketItemDtoTests
     public void UnitPrice_MustBePositive()
     {
         var item = new BasketItemDto(
-            productId: Guid.NewGuid(),
+            productVariantId: Guid.NewGuid(),
             productName: "Ethiopian Yirgacheffe",
             pictureUrl: null,
             unitPrice: 0m,
@@ -78,7 +78,7 @@ public class BasketItemDtoTests
     public void DomainEntity_AcceptsNullPictureUrl()
     {
         var entity = new BasketItem(
-            productId: Guid.NewGuid(),
+            productVariantId: Guid.NewGuid(),
             productName: "Ethiopian Yirgacheffe",
             pictureUrl: null,
             unitPrice: 12.50m,
