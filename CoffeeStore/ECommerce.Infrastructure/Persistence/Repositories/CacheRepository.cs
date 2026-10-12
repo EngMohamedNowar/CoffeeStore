@@ -1,6 +1,5 @@
 ﻿using ECommerce.Domain.Contracts.Repositories;
 using StackExchange.Redis;
-using System.Text.Json;
 
 namespace ECommerce.Infrastructure.Persistence.Repositories;
 
@@ -14,9 +13,28 @@ public class CacheRepository(IConnectionMultiplexer connection) : ICacheReposito
         return value.IsNullOrEmpty ? null : value.ToString();
     }
 
-    public async Task SetAsync(string key, object value, TimeSpan? duration = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync(string key, string value, TimeSpan? duration = null, CancellationToken cancellationToken = default)
     {
-        var redisValue = JsonSerializer.Serialize(value);
-        await _dataBase.StringSetAsync(key, redisValue, duration ?? TimeSpan.FromMinutes(1));
+        await _dataBase.StringSetAsync(key, value, duration ?? TimeSpan.FromMinutes(1));
+    }
+
+    public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+    {
+        await _dataBase.KeyDeleteAsync(key);
+    }
+
+    public async Task RemoveByPrefixAsync(string prefix, CancellationToken cancellationToken = default)
+    {
+        foreach (var endpoint in connection.GetEndPoints())
+        {
+            var server = connection.GetServer(endpoint);
+            if (!server.IsConnected || server.IsReplica)
+                continue;
+
+            foreach (var key in server.Keys(pattern: prefix + "*"))
+            {
+                await _dataBase.KeyDeleteAsync(key);
+            }
+        }
     }
 }
