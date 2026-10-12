@@ -7,5 +7,6 @@ public class ProductVariantsByIdsSpecification : BaseSpecification<ProductVarian
     public ProductVariantsByIdsSpecification(IReadOnlyCollection<Guid> ids)
         : base(v => ids.Contains(v.Id))
     {
+        AddInclude(v => v.Product);
     }
 }

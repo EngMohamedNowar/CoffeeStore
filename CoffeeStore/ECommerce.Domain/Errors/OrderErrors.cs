@@ -99,4 +99,7 @@ public static class OrderErrors
         Error.Validation("Order.InvalidWebhook", "Stripe webhook signature is invalid.");
     public static readonly Error InvalidWeight =
     Error.Validation("Order.InvalidWeight", "Weight must be at least 1 gram.");
+
+    public static readonly Error InsufficientStock =
+        Error.Validation("Order.InsufficientStock", "Requested quantity exceeds the available stock.");
 }
