@@ -4,7 +4,7 @@ namespace ECommerce.Domain.Entities.Baskets;
 
 public class BasketItem
 {
-    public Guid ProductId { get; private set; }
+    public Guid ProductVariantId { get; private set; }
 
     public string ProductName { get; private set; } = string.Empty;
 
@@ -15,9 +15,9 @@ public class BasketItem
     public int Quantity { get; private set; }
 
     [JsonConstructor]
-    public BasketItem(Guid productId, string productName, string? pictureUrl, decimal unitPrice, int quantity)
+    public BasketItem(Guid productVariantId, string productName, string? pictureUrl, decimal unitPrice, int quantity)
     {
-        ProductId = productId;
+        ProductVariantId = productVariantId;
         ProductName = productName;
         PictureUrl = pictureUrl;
         UnitPrice = unitPrice;

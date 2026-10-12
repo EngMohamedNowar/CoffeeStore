@@ -5,14 +5,24 @@ namespace ECommerce.Application.Services.Classes.Cache
 {
     public class CacheServices(ICacheRepository repository) : ICacheServices
     {
-        public async Task<string?> GetAsync(string key, CancellationToken cancellationToken = default)
+        public Task<string?> GetAsync(string key, CancellationToken cancellationToken = default)
         {
-            return await repository.GetAsync(key, cancellationToken);
+            return repository.GetAsync(key, cancellationToken);
         }
 
-        public async Task SetAsync(string key, object value, TimeSpan? duration = null, CancellationToken cancellationToken = default)
+        public Task SetAsync(string key, string value, TimeSpan? duration = null, CancellationToken cancellationToken = default)
         {
-            await repository.SetAsync(key, value, duration ?? TimeSpan.FromMinutes(1), cancellationToken);
+            return repository.SetAsync(key, value, duration ?? TimeSpan.FromMinutes(1), cancellationToken);
+        }
+
+        public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+        {
+            return repository.RemoveAsync(key, cancellationToken);
+        }
+
+        public Task RemoveByPrefixAsync(string prefix, CancellationToken cancellationToken = default)
+        {
+            return repository.RemoveByPrefixAsync(prefix, cancellationToken);
         }
     }
 }

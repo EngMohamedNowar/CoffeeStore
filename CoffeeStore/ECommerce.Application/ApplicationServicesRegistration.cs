@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using ECommerce.Application.Common.Messaging;
+using ECommerce.Application.MappingProfiles.Baskets;
+using ECommerce.Application.MappingProfiles.DeliveryMethods;
 using ECommerce.Application.MappingProfiles.Products;
 using ECommerce.Application.Services.Classes.Authentications;using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
@@ -28,6 +31,7 @@ public static class ApplicationServicesRegistration
         services.AddScoped<IBasketService, BasketService>();
         services.AddScoped<IOrderServices, OrderServices>();
         services.AddScoped<ICacheServices, CacheServices>();
+        services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IAuthenticationService, AuthenticationsServices>();
         services.AddScoped<ITokenServices, TokenServices>();
 
@@ -37,5 +41,7 @@ public static class ApplicationServicesRegistration
     private static void BuildMapperConfiguration(IServiceProvider sp, IMapperConfigurationExpression cfg)
     {
         cfg.AddProfile(sp.GetRequiredService<ProductProfile>());
+        cfg.AddProfile(new BasketsProfile());
+        cfg.AddProfile(new DeliveryMethodProfile());
     }
 }

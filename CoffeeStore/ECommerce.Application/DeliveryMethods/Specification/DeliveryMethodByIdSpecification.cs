@@ -1,7 +1,7 @@
 using ECommerce.Application.Specifications;
 using ECommerce.Domain.Entities.Orders;
 
-namespace ECommerce.Application.Specifications;
+namespace ECommerce.Application.DeliveryMethods.Specification;
 
 public class DeliveryMethodByIdSpecification : BaseSpecification<DeliveryMethod>
 {

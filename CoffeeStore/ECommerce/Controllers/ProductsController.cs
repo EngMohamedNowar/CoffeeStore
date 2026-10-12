@@ -11,7 +11,7 @@ public class ProductsController(IProductService productService) : ApiControllerB
 {
     [Authorize]
     [HttpGet]
-    [RedisCache]
+    [RedisCache(DurationInSeconds = 300, VaryByUser = false)]
     public async Task<ActionResult<PaginationResult<ProductDto>>> GetAllProducts(
         [FromQuery] ProductQueryParams queryParams,
         CancellationToken ct = default)
@@ -19,8 +19,10 @@ public class ProductsController(IProductService productService) : ApiControllerB
         var result = await productService.GetAllActiveAsync(queryParams, ct);
         return ToActionResult(result);
     }
+
     [Authorize]
     [HttpGet("{slug}")]
+    [RedisCache(DurationInSeconds = 300, VaryByUser = false)]
     public async Task<ActionResult<ProductDto>> GetProductBySlug(string slug, CancellationToken ct = default)
     {
         var result = await productService.GetBySlugAsync(slug, ct);

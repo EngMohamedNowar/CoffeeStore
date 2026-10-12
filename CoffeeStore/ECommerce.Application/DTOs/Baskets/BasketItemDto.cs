@@ -5,8 +5,8 @@ namespace ECommerce.Application.DTOs.Baskets;
 
 public class BasketItemDto
 {
-    [Required(ErrorMessage = "Product Id is Required")]
-    public Guid ProductId { get; init; }
+    [Required(ErrorMessage = "Product Variant Id is Required")]
+    public Guid ProductVariantId { get; init; }
 
     [Required(ErrorMessage = "Product Name is Required")]
     public string ProductName { get; init; } = string.Empty;
@@ -21,13 +21,13 @@ public class BasketItemDto
 
     [JsonConstructor]
     public BasketItemDto(
-        Guid productId,
+        Guid productVariantId,
         string productName,
         string? pictureUrl,
         decimal unitPrice,
         int quantity)
     {
-        ProductId = productId;
+        ProductVariantId = productVariantId;
         ProductName = productName;
         PictureUrl = pictureUrl;
         UnitPrice = unitPrice;
