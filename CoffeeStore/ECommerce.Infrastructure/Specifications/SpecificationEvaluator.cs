@@ -1,3 +1,4 @@
+using ECommerce.Application.Specifications;
 using ECommerce.Domain.Common;
 using ECommerce.Domain.Specification;
 using Microsoft.EntityFrameworkCore;
@@ -56,4 +57,15 @@ public static class SpecificationEvaluator
         IQueryable<TEntity> inputQuery,
         ISpecification<TEntity> specs) where TEntity : BaseEntity
         => CreateQuery(inputQuery, specs, applyPaging: false, applyIncludes: false);
+
+    public static IQueryable<object> GetQueryWithSelect<TEntity>(
+            IQueryable<TEntity> inputQuery,
+            BaseSpecification<TEntity> spec) where TEntity : BaseEntity
+    {
+        var query = CreateQuery(inputQuery, spec);
+
+        return spec.SelectExpression is not null
+            ? query.Select(spec.SelectExpression)
+            : query.Cast<object>();
+    }
 }

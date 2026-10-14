@@ -1,4 +1,4 @@
-﻿using ECommerce.Domain.Common;
+using ECommerce.Domain.Common;
 using ECommerce.Domain.Specification;
 using System.Linq.Expressions;
 
@@ -19,6 +19,13 @@ public class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity 
 
     protected void AddInclude(Expression<Func<TEntity, object>> expression)
         => IncludeExpressions.Add(expression);
+
+
+    // Expression واحد للـ Select
+    public Expression<Func<TEntity, object>>? SelectExpression { get; private set; }
+
+    protected void AddSelect(Expression<Func<TEntity, object>> selectExpression)
+        => SelectExpression = selectExpression;
 
     public Expression<Func<TEntity, bool>>? WhereExpression { get; private set; }
 
