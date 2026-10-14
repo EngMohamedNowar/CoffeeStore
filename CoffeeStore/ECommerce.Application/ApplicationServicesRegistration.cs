@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using ECommerce.Application.Common.Messaging;
+using ECommerce.Application.DeliveryMethods.Dtos;
+using ECommerce.Application.DeliveryMethods.Queries.GetAllDeliveryMethods;
+using ECommerce.Application.DeliveryMethods.Queries.GetDeliveryMethodById;
 using ECommerce.Application.MappingProfiles.Baskets;
 using ECommerce.Application.MappingProfiles.DeliveryMethods;
 using ECommerce.Application.MappingProfiles.Products;
@@ -32,6 +35,9 @@ public static class ApplicationServicesRegistration
         services.AddScoped<IOrderServices, OrderServices>();
         services.AddScoped<ICacheServices, CacheServices>();
         services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+        services.AddScoped<IRequestDispatcher, RequestDispatcher>();
+        services.AddScoped<IQueryHandler<GetDeliveryMethodByIdQuery, Result<DeliveryMethodResponse>>, GetDeliveryMethodByIdQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAllDeliveryMethodsQuery, Result<IReadOnlyList<DeliveryMethodResponse>>>, GetAllDeliveryMethodsQueryHandler>();
         services.AddScoped<IAuthenticationService, AuthenticationsServices>();
         services.AddScoped<ITokenServices, TokenServices>();
 
