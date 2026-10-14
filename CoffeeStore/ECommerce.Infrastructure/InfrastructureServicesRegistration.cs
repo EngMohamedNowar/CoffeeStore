@@ -51,6 +51,7 @@ public static class InfrastructureServicesRegistration
             .AddEntityFrameworkStores<StoreIdentityDbContext>();
 
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICacheRepository, CacheRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
