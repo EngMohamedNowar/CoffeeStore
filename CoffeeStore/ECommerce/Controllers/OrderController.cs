@@ -16,18 +16,18 @@ public class OrderController(
 {
     [HttpPost]
     public async Task<ActionResult<OrderResponse>> CreateOrder(
-        [FromBody] CreateOrderRequest request,
+        [FromBody] CreateOrderDto dto,
         CancellationToken ct = default)
     {
         var command = new CreateOrderCommand(
-            request.BasketId,
-            request.DeliveryMethodId,
+            dto.BasketId,
+            dto.DeliveryMethodId,
             GetEmail(),
-            request.FirstName,
-            request.LastName,
-            request.Street,
-            request.City,
-            request.Country);
+            dto.FirstName,
+            dto.LastName,
+            dto.Street,
+            dto.City,
+            dto.Country);
 
         var result = await requestDispatcher.SendAsync(command, ct);
         return ToActionResult(result);
@@ -53,15 +53,4 @@ public class OrderController(
 
     private string GetEmail()
         => User.FindFirstValue(ClaimTypes.Email) ?? throw new UnauthorizedAccessException();
-}
-
-public class CreateOrderRequest
-{
-    public Guid BasketId { get; set; }
-    public Guid DeliveryMethodId { get; set; }
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Street { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string Country { get; set; } = string.Empty;
 }

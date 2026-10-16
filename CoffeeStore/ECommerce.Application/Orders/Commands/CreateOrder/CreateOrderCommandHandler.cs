@@ -8,18 +8,29 @@ using ECommerce.Domain.Entities.Customers;
 using ECommerce.Domain.Entities.Orders;
 using ECommerce.Domain.Entities.Products;
 using ECommerce.Domain.Errors;
+using FluentValidation;
 
 namespace ECommerce.Application.Orders.Commands.CreateOrder;
 
 internal class CreateOrderCommandHandler(
     IBasketRepository basketRepository,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IValidator<CreateOrderCommand> validator)
     : IRequestHandler<CreateOrderCommand, Result<OrderResponse>>
 {
     public async Task<Result<OrderResponse>> HandleAsync(
         CreateOrderCommand command,
         CancellationToken cancellationToken = default)
     {
+        var validation = await validator.ValidateAsync(command, cancellationToken);
+        if (!validation.IsValid)
+        {
+            return Result<OrderResponse>.Fail(validation.Errors
+                .Select(e => Error.Validation(
+                    e.ErrorCode,
+                    e.ErrorMessage))
+                .ToArray());
+        }
         var basket = await basketRepository.GetBasketAsync(command.BasketId, cancellationToken);
         if (basket is null)
         {
