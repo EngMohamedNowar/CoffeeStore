@@ -1,11 +1,18 @@
 ﻿using AutoMapper;
 using ECommerce.Application.Common.Messaging;
+using ECommerce.Application.DeliveryMethods.Commands.CreateDeliveryMethod;
+using ECommerce.Application.DeliveryMethods.Commands.DeleteDeliveryMethod;
+using ECommerce.Application.DeliveryMethods.Commands.UpdateDeliveryMethod;
 using ECommerce.Application.DeliveryMethods.Dtos;
 using ECommerce.Application.DeliveryMethods.Queries.GetAllDeliveryMethods;
 using ECommerce.Application.DeliveryMethods.Queries.GetDeliveryMethodById;
 using ECommerce.Application.MappingProfiles.Baskets;
 using ECommerce.Application.MappingProfiles.DeliveryMethods;
 using ECommerce.Application.MappingProfiles.Products;
+using ECommerce.Application.Orders.Commands.CreateOrder;
+using ECommerce.Application.Orders.Dtos;
+using ECommerce.Application.Orders.Queries.GetOrderById;
+using ECommerce.Application.Orders.Queries.GetOrdersByEmail;
 using ECommerce.Application.Services.Classes.Authentications;using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
 using ECommerce.Application.Services.Classes.Orders;
@@ -38,6 +45,12 @@ public static class ApplicationServicesRegistration
         services.AddScoped<IRequestDispatcher, RequestDispatcher>();
         services.AddScoped<IQueryHandler<GetDeliveryMethodByIdQuery, Result<DeliveryMethodResponse>>, GetDeliveryMethodByIdQueryHandler>();
         services.AddScoped<IQueryHandler<GetAllDeliveryMethodsQuery, Result<IReadOnlyList<DeliveryMethodResponse>>>, GetAllDeliveryMethodsQueryHandler>();
+        services.AddScoped<IRequestHandler<CreateDeliveryMethodCommand, Result<DeliveryMethodResponse>>, CreateDeliveryMethodCommandHandler>();
+        services.AddScoped<IRequestHandler<UpdateDeliveryMethodCommand, Result<DeliveryMethodResponse>>, UpdateDeliveryMethodCommandHandler>();
+        services.AddScoped<IRequestHandler<DeleteDeliveryMethodCommand, Result<bool>>, DeleteDeliveryMethodCommandHandler>();
+        services.AddScoped<IRequestHandler<CreateOrderCommand, Result<OrderResponse>>, CreateOrderCommandHandler>();
+        services.AddScoped<IQueryHandler<GetOrdersByEmailQuery, Result<IReadOnlyList<OrderResponse>>>, GetOrdersByEmailQueryHandler>();
+        services.AddScoped<IQueryHandler<GetOrderByIdQuery, Result<OrderResponse>>, GetOrderByIdQueryHandler>();
         services.AddScoped<IAuthenticationService, AuthenticationsServices>();
         services.AddScoped<ITokenServices, TokenServices>();
 
