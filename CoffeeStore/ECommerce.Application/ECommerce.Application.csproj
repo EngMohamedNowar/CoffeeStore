@@ -21,4 +21,8 @@
   <ItemGroup>
     <Using Include="ECommerce.Domain.Shared" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="ECommerce.Tests" />
+  </ItemGroup>
 </Project>

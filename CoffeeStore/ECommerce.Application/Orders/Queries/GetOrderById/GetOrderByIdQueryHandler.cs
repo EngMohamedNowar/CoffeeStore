@@ -33,6 +33,13 @@ internal class GetOrderByIdQueryHandler(
         if (order is null)
             return Result<OrderResponse>.Fail(OrderErrors.NotFound);
 
+        if (!query.IsAdmin
+            && !string.Equals(
+                order.UserEmail,
+                query.Email.Trim(),
+                StringComparison.OrdinalIgnoreCase))
+            return Result<OrderResponse>.Fail(OrderErrors.Forbidden);
+
         return Result<OrderResponse>.Ok(OrderMapping.ToResponse(order));
     }
 }
