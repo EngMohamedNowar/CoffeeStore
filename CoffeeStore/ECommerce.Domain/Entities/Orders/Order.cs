@@ -111,6 +111,33 @@ public class Order : BaseEntity
         return Result.Success();
     }
 
+    private static readonly IReadOnlyDictionary<OrderStatus, OrderStatus[]> AllowedTransitions =
+        new Dictionary<OrderStatus, OrderStatus[]>
+        {
+            [OrderStatus.Pending] = [OrderStatus.Confirmed, OrderStatus.Cancelled],
+            [OrderStatus.Confirmed] = [OrderStatus.Processing, OrderStatus.Cancelled],
+            [OrderStatus.Processing] = [OrderStatus.Shipped, OrderStatus.Cancelled],
+            [OrderStatus.Shipped] = [OrderStatus.Delivered],
+            [OrderStatus.Delivered] = [OrderStatus.Refunded],
+            [OrderStatus.Cancelled] = [],
+            [OrderStatus.Refunded] = []
+        };
+
+    public Result ChangeStatus(OrderStatus newStatus)
+    {
+        if (!Enum.IsDefined(newStatus) || newStatus == Status)
+            return Result.Failure(OrderErrors.InvalidStatusTransition);
+
+        if (!AllowedTransitions.TryGetValue(Status, out var allowed)
+            || !allowed.Contains(newStatus))
+            return Result.Failure(OrderErrors.InvalidStatusTransition);
+
+        Status = newStatus;
+        UpdatedAt = DateTime.UtcNow;
+
+        return Result.Success();
+    }
+
     private static Error? Validate(
         Guid id,
         Guid customerId,

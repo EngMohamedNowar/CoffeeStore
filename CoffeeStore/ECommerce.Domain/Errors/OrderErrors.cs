@@ -47,6 +47,9 @@ public static class OrderErrors
     public static readonly Error CannotCancel =
         Error.Conflict("Order.CannotCancel", "Only pending orders can be cancelled.");
 
+    public static readonly Error InvalidStatusTransition =
+        Error.Conflict("Order.InvalidStatusTransition", "The requested status transition is not allowed.");
+
     public static readonly Error DeliveryMethodRequired =
         Error.Validation("Order.DeliveryMethodRequired", "Delivery method is required.");
 
