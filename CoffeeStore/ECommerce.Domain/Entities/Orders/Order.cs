@@ -36,7 +36,8 @@ public class Order : BaseEntity
     public Payment? Payment { get; private set; }
 
     public decimal GetTotal() => SubTotal + DeliveryMethodPrice + ShippingFee;
-
+    public string? PaymentCost { get; private set; }
+    public DateTimeOffset? PaidAtUtc { get; private set; }
     public static Result<Order> Create(
         Guid id,
         Guid customerId,
@@ -106,6 +107,7 @@ public class Order : BaseEntity
             return Result.Failure(OrderErrors.InvalidPaymentState);
 
         Status = OrderStatus.Confirmed;
+        PaidAtUtc = DateTimeOffset.UtcNow;
         UpdatedAt = DateTime.UtcNow;
 
         return Result.Success();
