@@ -249,6 +249,12 @@ namespace ECommerce.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
+                    b.Property<DateTimeOffset?>("PaidAtUtc")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PaymentCost")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("ShippingAddressId")
                         .HasColumnType("uniqueidentifier");
 
