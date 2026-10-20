@@ -15,11 +15,16 @@ using ECommerce.Application.Orders.Commands.UpdateOrder;
 using ECommerce.Application.Orders.Dtos;
 using ECommerce.Application.Orders.Queries.GetOrderById;
 using ECommerce.Application.Orders.Queries.GetOrdersByEmail;
+using ECommerce.Application.Payments.Commands.CreatePaymentIntent;
+using ECommerce.Application.Payments.Commands.HandlePaymentWebhook;
+using ECommerce.Application.Payments.Dtos;
+using ECommerce.Application.Payments.Queries.GetPaymentByOrderId;
 using ECommerce.Application.Services.Classes.Authentications;using ECommerce.Application.Services.Classes.Baskets;
 using ECommerce.Application.Services.Classes.Cache;
 using ECommerce.Application.Services.Classes.Orders;
 using ECommerce.Application.Services.Classes.Products;
 using ECommerce.Application.Services.Contracts;
+using ECommerce.Application.Settings;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +43,7 @@ public static class ApplicationServicesRegistration
         services.AddValidatorsFromAssembly(typeof(ApplicationServicesRegistration).Assembly);
 
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.Configure<StripeSettings>(configuration.GetSection(StripeSettings.SectionName));
 
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IBasketService, BasketService>();
@@ -55,6 +61,9 @@ public static class ApplicationServicesRegistration
         services.AddScoped<IRequestHandler<CancelOrderCommand, Result<OrderResponse>>, CancelOrderCommandHandler>();
         services.AddScoped<IQueryHandler<GetOrdersByEmailQuery, Result<IReadOnlyList<OrderResponse>>>, GetOrdersByEmailQueryHandler>();
         services.AddScoped<IQueryHandler<GetOrderByIdQuery, Result<OrderResponse>>, GetOrderByIdQueryHandler>();
+        services.AddScoped<IRequestHandler<CreatePaymentIntentCommand, Result<PaymentResponse>>, CreatePaymentIntentCommandHandler>();
+        services.AddScoped<IRequestHandler<HandlePaymentWebhookCommand, Result<bool>>, HandlePaymentWebhookCommandHandler>();
+        services.AddScoped<IQueryHandler<GetPaymentByOrderIdQuery, Result<PaymentResponse>>, GetPaymentByOrderIdQueryHandler>();
         services.AddScoped<IAuthenticationService, AuthenticationsServices>();
         services.AddScoped<ITokenServices, TokenServices>();
 

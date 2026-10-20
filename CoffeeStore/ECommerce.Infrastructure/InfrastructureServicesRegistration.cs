@@ -10,6 +10,7 @@ using ECommerce.Infrastructure.Persistence.Interceptors;
 using ECommerce.Infrastructure.Persistence.DataSeeding;
 using ECommerce.Infrastructure.Persistence.Identity.Data;
 using ECommerce.Infrastructure.Persistence.Repositories;
+using ECommerce.Infrastructure.PaymentServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,7 @@ public static class InfrastructureServicesRegistration
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<ICacheRepository, CacheRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
+        services.AddScoped<IPaymentService, PaymentService>();
         var jwtOptions = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
                           ?? new JwtOptions();
 
